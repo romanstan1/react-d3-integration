@@ -3,6 +3,31 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
-div {
-  background: red;
+
+div.progress-arc {
+  margin-top: 20px;
+  background: ghostwhite;
+  a {
+    display: inline-block;
+    margin: 10px;
+    padding: 5px;
+    cursor: pointer;
+    background: grey;
+  }
+}
+
+
+
+div.similarity-network {
+  background: ghostwhite;
+  height: 95vh;
+
+  >div {
+    height: 100%;
+    width: 100%;
+  }
+  a {
+    cursor: pointer;
+    background: grey;
+  }
 }

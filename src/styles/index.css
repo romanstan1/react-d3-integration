@@ -3,5 +3,22 @@ body {
   padding: 0;
   font-family: sans-serif; }
 
-div {
-  background: red; }
+div.progress-arc {
+  margin-top: 20px;
+  background: ghostwhite; }
+  div.progress-arc a {
+    display: inline-block;
+    margin: 10px;
+    padding: 5px;
+    cursor: pointer;
+    background: grey; }
+
+div.similarity-network {
+  background: ghostwhite;
+  height: 95vh; }
+  div.similarity-network > div {
+    height: 100%;
+    width: 100%; }
+  div.similarity-network a {
+    cursor: pointer;
+    background: grey; }

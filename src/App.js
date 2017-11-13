@@ -16,20 +16,20 @@ class App extends Component {
           id="similarity-network"
           dimensions={{height:window.innerHeight, width:window.innerWidth}}
         />
-      </div>,
-      <div key='arc' className='progress-arc'>
-        <a onClick={this.togglePercent}>Toggle Arc</a>
-        <ProgressArc
-          height={300}
-          width={300}
-          innerRadius={100}
-          outerRadius={110}
-          id="d3-arc"
-          backgroundColor="#e6e6e6"
-          foregroundColor="#00ff00"
-          percentComplete={this.state.percentComplete}
-        />
       </div>
+      // <div key='arc' className='progress-arc'>
+      //   <a onClick={this.togglePercent}>Toggle Arc</a>
+      //   <ProgressArc
+      //     height={300}
+      //     width={300}
+      //     innerRadius={100}
+      //     outerRadius={110}
+      //     id="d3-arc"
+      //     backgroundColor="#e6e6e6"
+      //     foregroundColor="#00ff00"
+      //     percentComplete={this.state.percentComplete}
+      //   />
+      // </div>
     ]
   }
 }

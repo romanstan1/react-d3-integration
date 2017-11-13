@@ -1,3 +1,7 @@
+html {
+    // overflow: hidden;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -5,7 +9,6 @@ body {
 }
 
 div.progress-arc {
-  margin-top: 20px;
   background: ghostwhite;
   a {
     display: inline-block;
@@ -20,7 +23,15 @@ div.progress-arc {
 
 div.similarity-network {
   background: ghostwhite;
-  height: 95vh;
+  // height: 95vh;
+  .node {
+    fill: dodgerblue;
+    opacity: .75;
+  }
+  .link {
+    stroke: black;
+    opacity: .35;
+  }
 
   >div {
     height: 100%;

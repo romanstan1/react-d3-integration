@@ -4,7 +4,6 @@ body {
   font-family: sans-serif; }
 
 div.progress-arc {
-  margin-top: 20px;
   background: ghostwhite; }
   div.progress-arc a {
     display: inline-block;
@@ -14,8 +13,13 @@ div.progress-arc {
     background: grey; }
 
 div.similarity-network {
-  background: ghostwhite;
-  height: 95vh; }
+  background: ghostwhite; }
+  div.similarity-network .node {
+    fill: dodgerblue;
+    opacity: .75; }
+  div.similarity-network .link {
+    stroke: black;
+    opacity: .35; }
   div.similarity-network > div {
     height: 100%;
     width: 100%; }

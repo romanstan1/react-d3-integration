@@ -93,9 +93,10 @@ var diameter, radius, innerRadius, cluster, line, svg
 
 
 function initializeDom() {
-  diameter = window.innerWidth
+  console.log("window.innerHeight",window.innerHeight)
+  diameter = window.innerHeight
   radius = diameter / 2
-  innerRadius = radius - 80
+  innerRadius = radius - 60
 
   cluster = d3.cluster()
       .size([360, innerRadius]);

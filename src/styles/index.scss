@@ -8,6 +8,98 @@ body {
   font-family: sans-serif;
 }
 
+
+div.error {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+}
+div.navigation {
+  div {
+    a {
+      line-height: 20px;
+      height: 20px;
+      padding-left: 10px;
+      background: teal;
+      width: 100%;
+      display: block;
+      color: black;
+      text-decoration: none;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+div.hierarchical-edge {
+
+  .node {
+    font: 300 10px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    fill: #bbb;
+    cursor: crosshair;
+  }
+
+  .node:hover {
+    fill: #000;
+  }
+
+  .link {
+    stroke: steelblue;
+    stroke-opacity: 0.2;
+    fill: none;
+    pointer-events: none;
+  }
+
+  .node:hover,
+  .node--source,
+  .node--target {
+    font-weight: 700;
+  }
+
+  .node--source {
+    fill: #325cd1;
+  }
+
+  .node--target {
+    fill: #325cd1;
+  }
+
+  .link--source,
+  .link--target {
+    stroke-opacity: 1;
+    // stroke-width: 2px;
+  }
+
+  $link: rgba(5, 24, 66,0.9);
+
+  .link--source {
+    stroke: $link;
+  }
+
+  .link--target {
+    stroke: $link;
+
+  }
+
+  .group-tick line {
+    stroke: #000;
+  }
+
+  .ribbons {
+    fill-opacity: 1;
+  }
+
+  text-align: center;
+  height: calc(100vh - 40px);
+  > div {
+    height: 100%;
+  }
+}
+
+
 div.progress-arc {
   background: ghostwhite;
   a {
@@ -18,8 +110,6 @@ div.progress-arc {
     background: grey;
   }
 }
-
-
 
 div.similarity-network {
   background: ghostwhite;

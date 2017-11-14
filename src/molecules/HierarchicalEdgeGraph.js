@@ -1,19 +1,37 @@
 import React, { Component } from 'react';
 import * as d3 from "d3";
 
-function createImportData(data) {
+function categoryForRow(row, category) {
+  switch(category) {
+    case 'Material': return row.material+ '.'+ row.name
+    case 'Gender': return row.gender+ '.'+ row.name
+    case 'Color': return row.color+ '.'+ row.name
+    case 'Style': return row.style+ '.'+ row.name
+    default: return row.material+ '.'+ row.name
+  }
+}
+
+function categoryForLinkRow(row, category) {
+  switch(category) {
+    case 'Material': return row.linkMaterial+ '.'+ row.linkName
+    case 'Gender': return row.linkGender+ '.'+ row.linkName
+    case 'Color': return row.linkColor+ '.'+ row.linkName
+    case 'Style': return row.linkStyle+ '.'+ row.linkName
+    default: return row.linkMaterial+ '.'+ row.linkName
+  }
+}
+
+function createImportData(data, category) {
 
   const newData = data.reduce((arr, row)=> {
 
-    const newRowName = row.material+ '.'+row.name
-    const newLinkRowName = row.linkMaterial+ '.'+row.linkName
-
+    const newRowName = categoryForRow(row, category)
+    const newLinkRowName = categoryForLinkRow(row, category)
     const indexOfName = arr.findIndex((findRow)=> newRowName === findRow.name)
 
     if(indexOfName === -1) {
       return arr.concat({
-        category: row.material,
-        name: row.material+ '.' +row.name,
+        name: newRowName,
         imports: [newLinkRowName]
       })
     } else {
@@ -24,9 +42,6 @@ function createImportData(data) {
 
   return newData;
 }
-
-
-
 
 // Lazily construct the package hierarchy from class names.
 function packageHierarchy(classes) {
@@ -74,98 +89,150 @@ function packageImports(nodes) {
 }
 
 
-export default class HierarchicalEdgeGraph extends Component {
-    componentDidMount() {
-      const diameter = window.innerWidth
-      const radius = diameter / 2
-      const innerRadius = radius - 80
+var diameter, radius, innerRadius, cluster, line, svg
 
-      const cluster = d3.cluster()
-          .size([360, innerRadius]);
 
-      const line = d3.radialLine()
-          .curve(d3.curveBundle.beta(0.85))
-          .radius(function(d) { return d.y; })
-          .angle(function(d) { return d.x / 180 * Math.PI; });
+function initializeDom() {
+  diameter = window.innerWidth
+  radius = diameter / 2
+  innerRadius = radius - 80
 
-      const svg = d3.select("div#flare").append("svg")
-          .attr("width", diameter)
-          .attr("height", diameter)
-          .append("g")
-          .attr("transform", "translate(" + radius + "," + radius + ")");
+  cluster = d3.cluster()
+      .size([360, innerRadius]);
 
-      let link = svg.append("g").selectAll(".link")
-      let node = svg.append("g").selectAll(".node")
+  line = d3.radialLine()
+      .curve(d3.curveBundle.beta(0.85))
+      .radius(function(d) { return d.y; })
+      .angle(function(d) { return d.x / 180 * Math.PI; });
 
-      d3.csv('../HierarchicalEdge.csv', function(error, classes) {
-        var newRoot = createImportData(classes)
-        var root = packageHierarchy(newRoot)
-        cluster(root)
-        var previousLink
-        var linkFreq = 1
-        link = link
-          .data(packageImports(root.leaves()))
-          .enter().append("path")
-          .each((d) => {
-            d.source = d[0]
-            d.target = d[d.length - 1]
-          })
-          .attr("class", "link")
-          .attr("stroke-width", d => {
-            const currentLink = d.source.data.key + '-' + d.target.data.key
-            if(currentLink === previousLink) linkFreq = linkFreq * 2
-            else linkFreq = 1
-            previousLink = currentLink
-            return linkFreq
-          })
-          .attr("d", line);
+  svg = d3.select("div#flare").append("svg")
+      .attr("width", diameter)
+      .attr("height", diameter)
+      .append("g")
+      .attr("transform", "translate(" + radius + "," + radius + ")");
+}
 
-      node = node
-        .data(root.leaves())
-        .enter().append("text")
-          .attr("class", "node")
-          .attr("dy", "0.31em")
-          .attr("transform", (d) => "rotate(" + (d.x - 90) + ")translate(" + (d.y + 8) + ",0)" + (d.x < 180 ? "" : "rotate(180)"))
-          .attr("text-anchor", (d) => d.x < 180 ? "start" : "end")
-          .text((d) => d.data.key)
-          .on("mouseover", mouseovered)
-          .on("mouseout", mouseouted);
+
+function renderDom(category) {
+
+  svg.select("g").remove()
+  svg.select("g").remove()
+
+  let link = svg.append("g").selectAll(".link")
+  let node = svg.append("g").selectAll(".node")
+
+  d3.csv('../HierarchicalEdge.csv', (error, classes) => {
+    var newRoot = createImportData(classes, category)
+    var root = packageHierarchy(newRoot)
+    cluster(root)
+
+    // link.exit().remove()
+    // node.exit().remove()
+
+    // console.log("link",link)
+
+    var previousLink
+    var linkFreq = 1
+
+     link = link
+      .data(packageImports(root.leaves()))
+      .enter().append("path")
+      .each((d) => {
+        d.source = d[0]
+        d.target = d[d.length - 1]
       })
+      .attr("class", "link")
+      .attr("stroke-width", d => {
+        const currentLink = d.source.data.key + '-' + d.target.data.key
+        if(currentLink === previousLink) linkFreq = linkFreq * 2
+        else linkFreq = 1
+        previousLink = currentLink
+        return linkFreq
+      })
+      .attr("d", line)
 
-      function mouseovered(d) {
-        node.each((n) => {n.target = n.source = false})
-
-        link
-          .classed("link--target", (l) => { if (l.target === d) return l.source.source = true})
-          .classed("link--source", (l) => { if (l.source === d) return l.target.target = true})
-          .filter((l) => l.target === d || l.source === d).raise()
-
-        node
-          .classed("node--target", n => n.target)
-          .classed("node--source", n => n.source)
-      }
-
-      function mouseouted(d) {
-        link
-          .classed("link--target", false)
-          .classed("link--source", false)
-
-        node
-          .classed("node--target", false)
-          .classed("node--source", false)
-      }
+    node = node
+      .data(root.leaves())
+      .enter().append("text")
+      .attr("class", "node")
+      .attr("dy", "0.31em")
+      .attr("transform", (d) => "rotate(" + (d.x - 90) + ")translate(" + (d.y + 8) + ",0)" + (d.x < 180 ? "" : "rotate(180)"))
+      .attr("text-anchor", (d) => d.x < 180 ? "start" : "end")
+      .text((d) => d.data.key)
+      .on("mouseover", mouseovered)
+      .on("mouseout", mouseouted)
+  })
 
 
+  function mouseovered(d) {
+    node.each((n) => {n.target = n.source = false})
 
-    }
-    shouldComponentUpdate(nextProps) {
-        return false;
-    }
-    render() {
-        return (
-            // <svg width={window.innerWidth} height={window.innerHeight}></svg>
-            <div id='flare'></div>
-            // </div>
-        )
-    }
+    link
+      .classed("link--target", (l) => { if (l.target === d) return l.source.source = true})
+      .classed("link--source", (l) => { if (l.source === d) return l.target.target = true})
+      .filter((l) => l.target === d || l.source === d).raise()
+
+    node
+      .classed("node--target", n => n.target)
+      .classed("node--source", n => n.source)
+  }
+
+  function mouseouted(d) {
+    link
+      .classed("link--target", false)
+      .classed("link--source", false)
+
+    node
+      .classed("node--target", false)
+      .classed("node--source", false)
+  }
+}
+
+
+
+
+
+
+
+
+
+
+const CategoryButton = ({handleClick, value, category}) => {
+  const className = value === category? 'button active' : 'button'
+  return <div onClick={handleClick} data-value={value} className={className}> {value}</div>
+}
+
+class Graph extends Component {
+  componentDidMount() {
+    initializeDom()
+  }
+  shouldComponentUpdate(nextProps) {
+    return false;
+  }
+  render() {
+    return <div key='vis' id='flare'></div>
+  }
+}
+
+export default class HierarchicalEdgeGraph extends Component {
+
+  state = {
+    category: null
+  }
+  handleClick = (e) => {
+    this.setState({category:e.target.dataset.value})
+    renderDom(e.target.dataset.value)
+  }
+  render() {
+    const {category} = this.state
+    return [
+      <div key='buttons' className='select-category'>
+        <div className='title'>Categorize glasses by: </div>
+        {['Material', 'Gender', 'Color', 'Style'].map((item) =>
+          <CategoryButton value={item} key={item} handleClick={this.handleClick} category={category}/>
+        )}
+      </div>,
+      <Graph key='graph'/>
+    ]
+  }
 }

@@ -13,18 +13,44 @@ div.error {
 div.navigation div a {
   line-height: 20px;
   height: 20px;
-  padding-left: 10px;
-  background: teal;
+  background: rgba(5, 24, 66, 0.9);
   width: 100%;
+  font-size: 12px;
+  text-indent: 10px;
+  text-transform: uppercase;
   display: block;
-  color: black;
+  color: #eff1f2;
   text-decoration: none; }
   div.navigation div a:hover {
-    opacity: 0.8; }
+    opacity: 0.9; }
 
 div.hierarchical-edge {
   text-align: center;
   height: calc(100vh - 40px); }
+  div.hierarchical-edge div.select-category {
+    position: absolute;
+    top: 55px;
+    left: 20px;
+    font-size: 11px;
+    text-align: left;
+    display: flex; }
+    div.hierarchical-edge div.select-category div {
+      padding: 5px;
+      margin: 3px; }
+    div.hierarchical-edge div.select-category div.button {
+      box-sizing: border-box;
+      cursor: pointer;
+      border: 1px solid #94aab5;
+      color: #94aab5; }
+      div.hierarchical-edge div.select-category div.button:hover {
+        color: black;
+        border: 1px solid #70828c; }
+      div.hierarchical-edge div.select-category div.button.active {
+        color: white;
+        background: #70828c; }
+    div.hierarchical-edge div.select-category div.title {
+      font-weight: 600;
+      margin-top: 4px; }
   div.hierarchical-edge .node {
     font: 300 10px "Helvetica Neue", Helvetica, Arial, sans-serif;
     fill: #bbb;
@@ -55,8 +81,6 @@ div.hierarchical-edge {
     stroke: #000; }
   div.hierarchical-edge .ribbons {
     fill-opacity: 1; }
-  div.hierarchical-edge > div {
-    height: 100%; }
 
 div.progress-arc {
   background: ghostwhite; }

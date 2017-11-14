@@ -1,6 +1,7 @@
 html {
     // overflow: hidden;
 }
+$link: rgba(5, 24, 66,0.9);
 
 body {
   margin: 0;
@@ -21,20 +22,54 @@ div.navigation {
     a {
       line-height: 20px;
       height: 20px;
-      padding-left: 10px;
-      background: teal;
+      // margin-left: 10px;
+      background: $link;
       width: 100%;
+      font-size: 12px;
+      text-indent: 10px;
+      text-transform: uppercase;
       display: block;
-      color: black;
+      color: #eff1f2;
       text-decoration: none;
       &:hover {
-        opacity: 0.8;
+        opacity: 0.9;
       }
     }
   }
 }
 
 div.hierarchical-edge {
+
+  div.select-category {
+    position: absolute;
+    top: 55px;
+    left: 20px;
+    font-size: 11px;
+    text-align: left;
+    display: flex;
+    div {
+      padding: 5px;
+      margin: 3px;
+    }
+    div.button {
+      box-sizing: border-box;
+      cursor: pointer;
+      border: 1px solid #94aab5;
+      color:  #94aab5;
+      &:hover {
+        color:  black;
+        border: 1px solid #70828c;
+      }
+      &.active {
+        color:  white;
+        background: #70828c;
+      }
+    }
+    div.title {
+      font-weight: 600;
+      margin-top: 4px;
+    }
+  }
 
   .node {
     font: 300 10px "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -73,8 +108,6 @@ div.hierarchical-edge {
     // stroke-width: 2px;
   }
 
-  $link: rgba(5, 24, 66,0.9);
-
   .link--source {
     stroke: $link;
   }
@@ -94,9 +127,9 @@ div.hierarchical-edge {
 
   text-align: center;
   height: calc(100vh - 40px);
-  > div {
-    height: 100%;
-  }
+  // > div {
+  //   height: 100%;
+  // }
 }
 
 

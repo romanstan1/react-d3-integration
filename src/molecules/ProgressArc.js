@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from "d3";
 
-
-
 class GrandInnerChild extends Component {
   static contextTypes = {
       currentUser: PropTypes.string

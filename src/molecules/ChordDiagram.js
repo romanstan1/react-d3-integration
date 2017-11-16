@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {initializeDom, renderDom} from '../d3/hierarchical_graph_functions.js'
+import {initializeDom, renderDom} from '../d3/chord_diagram_functions.js'
 
 const CategoryButton = ({handleClick, value, category}) => {
   const className = value === category? 'button active' : 'button'
@@ -14,11 +14,11 @@ class Graph extends Component {
     return false;
   }
   render() {
-    return <div key='vis' id='flare'></div>
+    return <div key='vis' id='chord'></div>
   }
 }
 
-export default class HierarchicalEdgeGraph extends Component {
+export default class ChordDiagram extends Component {
 
   state = {
     otherState: this.props,

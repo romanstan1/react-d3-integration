@@ -24,8 +24,7 @@ div.error {
 }
 div.navigation {
   position: absolute;
-  width: 30%;
-  min-width: 380px;
+  width: 220px;
   div {
     a {
       line-height: 20px;
@@ -34,11 +33,12 @@ div.navigation {
       background: $link;
       width: 100%;
       font-size: 12px;
-      text-indent: 20px;
+      text-indent: 10px;
       text-transform: uppercase;
       display: block;
       color: #eff1f2;
       text-decoration: none;
+      opacity: 0.4;
       &:hover {
         opacity: 0.9;
       }
@@ -48,43 +48,81 @@ div.navigation {
 div#flare{
   font-size: 0px;
 }
-div.hierarchical-edge {
+div.draw-button {
+  box-sizing: border-box;
+  cursor: pointer;
+  border: 1px solid #94aab5;
+  color:  #94aab5;
+  width: 50px;
+  position: absolute;
+  left: calc(50% - 25px);
+  text-align: center;
+  font-size: 11px;
+  top: 100px;
+  &:hover {
+    color:  black;
+    border: 1px solid #70828c;
+  }
+  &.active {
+    color:  white;
+    background: #70828c;
+  }
+}
 
-  div.select-category {
-    position: absolute;
-    top: 55px;
-    left: 20px;
-    font-size: 11px;
-    text-align: left;
-    display: flex;
-    div {
-      padding: 5px;
-      margin: 3px;
+div.select-category {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 11px;
+  text-align: left;
+  display: flex;
+  div {
+    padding: 5px;
+    margin: 3px;
+  }
+  div.button {
+    box-sizing: border-box;
+    cursor: pointer;
+    border: 1px solid #94aab5;
+    color:  #94aab5;
+    &:hover {
+      color:  black;
+      border: 1px solid #70828c;
     }
-    div.button {
-      box-sizing: border-box;
-      cursor: pointer;
-      border: 1px solid #94aab5;
-      color:  #94aab5;
-      &:hover {
-        color:  black;
-        border: 1px solid #70828c;
-      }
-      &.active {
-        color:  white;
-        background: #70828c;
-      }
-    }
-    div.title {
-      font-weight: 600;
-      // margin-top: 4px;
+    &.active {
+      color:  white;
+      background: #70828c;
     }
   }
+  div.title {
+    font-weight: 600;
+    // margin-top: 4px;
+  }
+}
 
-  .node {
+div.chord-diagram {
+  .group-tick line {
+    stroke: #000;
+  }
+
+  .ribbons {
+    fill-opacity: 1;
+  }
+  .main-svg {
+    margin: 0 auto;
+  }
+}
+
+div.hierarchical-edge {
+  .node, {
     font: 300 10px "Helvetica Neue", Helvetica, Arial, sans-serif;
     fill: #bbb;
     cursor: crosshair;
+  }
+
+  .category-title {
+    font: 600 10.5px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    fill: black;
   }
 
   .node:hover {
@@ -127,19 +165,7 @@ div.hierarchical-edge {
 
   }
 
-  .group-tick line {
-    stroke: #000;
-  }
-
-  .ribbons {
-    fill-opacity: 1;
-  }
-
   text-align: center;
-  // height: calc(100vh - 40px);
-  // > div {
-  //   height: 100%;
-  // }
 }
 
 

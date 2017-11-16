@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ProgressArc, SimilarityNetwork, HierarchicalEdgeGraph} from '../matrix'
+import {ProgressArc, SimilarityNetwork, HierarchicalEdgeGraph, ChordDiagram, DotAnimation} from '../matrix'
 
 export class SimilarityNetworkPage extends Component {
   render() {
@@ -7,6 +7,30 @@ export class SimilarityNetworkPage extends Component {
       <div id='similarity-network' key='network' className='similarity-network'>
         <SimilarityNetwork
           id="similarity-network"
+          dimensions={{height:window.innerHeight, width:window.innerWidth}}
+        />
+      </div>
+    ]
+  }
+}
+export class ChordDiagramPage extends Component {
+  render() {
+    return [
+      <div id='chord-diagram' key='chord-diagram' className='chord-diagram'>
+        <ChordDiagram
+          id="chord-diagram"
+          dimensions={{height:window.innerHeight, width:window.innerWidth}}
+        />
+      </div>
+    ]
+  }
+}
+export class DotAnimationPage extends Component {
+  render() {
+    return [
+      <div id='dot-animation' key='dot-animation' className='dot-animation'>
+        <DotAnimation
+          id="dot-animation"
           dimensions={{height:window.innerHeight, width:window.innerWidth}}
         />
       </div>

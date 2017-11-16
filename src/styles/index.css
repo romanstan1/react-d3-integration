@@ -17,54 +17,85 @@ div.error {
 
 div.navigation {
   position: absolute;
-  width: 30%;
-  min-width: 380px; }
+  width: 220px; }
   div.navigation div a {
     line-height: 20px;
     height: 20px;
     background: rgba(5, 24, 66, 0.9);
     width: 100%;
     font-size: 12px;
-    text-indent: 20px;
+    text-indent: 10px;
     text-transform: uppercase;
     display: block;
     color: #eff1f2;
-    text-decoration: none; }
+    text-decoration: none;
+    opacity: 0.4; }
     div.navigation div a:hover {
       opacity: 0.9; }
 
 div#flare {
   font-size: 0px; }
 
+div.draw-button {
+  box-sizing: border-box;
+  cursor: pointer;
+  border: 1px solid #94aab5;
+  color: #94aab5;
+  width: 50px;
+  position: absolute;
+  left: calc(50% - 25px);
+  text-align: center;
+  font-size: 11px;
+  top: 100px; }
+  div.draw-button:hover {
+    color: black;
+    border: 1px solid #70828c; }
+  div.draw-button.active {
+    color: white;
+    background: #70828c; }
+
+div.select-category {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 11px;
+  text-align: left;
+  display: flex; }
+  div.select-category div {
+    padding: 5px;
+    margin: 3px; }
+  div.select-category div.button {
+    box-sizing: border-box;
+    cursor: pointer;
+    border: 1px solid #94aab5;
+    color: #94aab5; }
+    div.select-category div.button:hover {
+      color: black;
+      border: 1px solid #70828c; }
+    div.select-category div.button.active {
+      color: white;
+      background: #70828c; }
+  div.select-category div.title {
+    font-weight: 600; }
+
+div.chord-diagram .group-tick line {
+  stroke: #000; }
+
+div.chord-diagram .ribbons {
+  fill-opacity: 1; }
+
+div.chord-diagram .main-svg {
+  margin: 0 auto; }
+
 div.hierarchical-edge {
   text-align: center; }
-  div.hierarchical-edge div.select-category {
-    position: absolute;
-    top: 55px;
-    left: 20px;
-    font-size: 11px;
-    text-align: left;
-    display: flex; }
-    div.hierarchical-edge div.select-category div {
-      padding: 5px;
-      margin: 3px; }
-    div.hierarchical-edge div.select-category div.button {
-      box-sizing: border-box;
-      cursor: pointer;
-      border: 1px solid #94aab5;
-      color: #94aab5; }
-      div.hierarchical-edge div.select-category div.button:hover {
-        color: black;
-        border: 1px solid #70828c; }
-      div.hierarchical-edge div.select-category div.button.active {
-        color: white;
-        background: #70828c; }
-    div.hierarchical-edge div.select-category div.title {
-      font-weight: 600; }
   div.hierarchical-edge .node {
     font: 300 10px "Helvetica Neue", Helvetica, Arial, sans-serif;
     fill: #bbb;
     cursor: crosshair; }
+  div.hierarchical-edge .category-title {
+    font: 600 10.5px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    fill: black; }
   div.hierarchical-edge .node:hover {
     fill: #000; }
   div.hierarchical-edge .link {
@@ -87,10 +118,6 @@ div.hierarchical-edge {
     stroke: rgba(5, 24, 66, 0.9); }
   div.hierarchical-edge .link--target {
     stroke: rgba(5, 24, 66, 0.9); }
-  div.hierarchical-edge .group-tick line {
-    stroke: #000; }
-  div.hierarchical-edge .ribbons {
-    fill-opacity: 1; }
 
 div.progress-arc {
   background: ghostwhite; }

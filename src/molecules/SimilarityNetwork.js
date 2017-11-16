@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import * as d3 from "d3";
 import correlationData from '../assets/json/similarity_scores_correlation.json'
-// import 'd3-zoom'
 
 const simulation = d3.forceSimulation()
     .force("charge", d3.forceManyBody())
@@ -141,7 +140,6 @@ export default class SimilarityNetwork extends Component {
     render() {
         return (
           <span>
-            <div onClick={this.handleClick}>click</div>
             <Graph
                 dimensions={this.props.dimensions}
                 nodes={this.state.nodeData}

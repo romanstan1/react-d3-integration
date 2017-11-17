@@ -27,7 +27,6 @@ class Graph extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        console.log("nextProps",nextProps)
         this.graph = d3.select(this.refs.graph)
         this.graph.selectAll("*").remove()
 
@@ -111,9 +110,6 @@ for (let i = 0; i < nodeCount; i++) {
 //     target
 //   });
 // }
-// console.log("nodeData",nodeData)
-// // console.log("links",links)
-// console.log("linkData",linkData)
 
 export default class SimilarityNetwork extends Component {
     state = {
@@ -121,7 +117,6 @@ export default class SimilarityNetwork extends Component {
         linkData:[]
     }
     componentDidMount() {
-        console.log("this SimilarityNetwork mounted")
        this.updateData()
     }
     componentWillUnmount() {
@@ -133,7 +128,6 @@ export default class SimilarityNetwork extends Component {
        this.setState({nodeData, linkData})
     }
     handleClick = () => {
-        console.log("this",this)
        this.setState({nodeData:[], linkData:[]})
     }
 

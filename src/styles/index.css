@@ -1,3 +1,6 @@
+html {
+  overflow: hidden; }
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -10,6 +13,8 @@ body {
 
 div.dot-animation {
   height: 100vh; }
+  div.dot-animation div#dot-canvas {
+    font-size: 0px; }
   div.dot-animation canvas {
     height: 100%;
     width: 100%; }
@@ -49,16 +54,13 @@ div.draw-button {
   color: #94aab5;
   width: 50px;
   position: absolute;
-  left: calc(50% - 25px);
+  right: 15px;
   text-align: center;
   font-size: 11px;
-  top: 100px; }
+  top: 10px; }
   div.draw-button:hover {
-    color: black;
+    color: grey;
     border: 1px solid #70828c; }
-  div.draw-button.active {
-    color: white;
-    background: #70828c; }
 
 div.select-category {
   position: absolute;

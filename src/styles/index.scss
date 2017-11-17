@@ -1,5 +1,5 @@
 html {
-    // overflow: hidden;
+    overflow: hidden;
 }
 $link: rgba(5, 24, 66,0.9);
 
@@ -19,6 +19,9 @@ body {
 
 div.dot-animation{
   height: 100vh;
+  div#dot-canvas {
+    font-size: 0px;
+  }
   canvas {
     height: 100%;
     width: 100%;
@@ -68,17 +71,13 @@ div.draw-button {
   color:  #94aab5;
   width: 50px;
   position: absolute;
-  left: calc(50% - 25px);
+  right: 15px;
   text-align: center;
   font-size: 11px;
-  top: 100px;
+  top: 10px;
   &:hover {
-    color:  black;
+    color:  grey;
     border: 1px solid #70828c;
-  }
-  &.active {
-    color:  white;
-    background: #70828c;
   }
 }
 

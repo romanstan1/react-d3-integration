@@ -1,31 +1,48 @@
 import * as THREE from 'three'
 import FOUR from './OrbitControls.js'
 
-var container, camera, controls, scene, renderer, cube, cubes, shadowCameraHelper, lightHelper, spotLight;
-
-
+var container, camera, controls, scene, renderer, cube, cubes, start;
+var shadowCameraHelper, lightHelper, spotLight;
 var tick = 0
 var counter = 0
 
-// var controls = new FOUR.OrbitControls
+start = false;
 
-// console.log("FOUR IN DOT ANIMATION",fourControl)
-  // console.log("THREE", new orbitControls, THREE)
-
-export function run() {
-  init()
+function run() {
   animate()
   move()
 }
-//
-function init() {
 
-  camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 0.1, 20000 );
+export function reinit () {
+  start = false
+  console.log("reinit")
+  const element = document.getElementById( 'dot-canvas' )
+  const parent = element.parentNode
+  parent.removeChild(element)
+  const node = document.createElement("div");
+  node.id = 'dot-canvas'
+  parent.appendChild(node)
+
+  tick = 0
+  counter = 0
+
+  init()
+}
+
+
+export function startstop() {
+  console.log("startstop")
+  start = !start
+  run()
+}
+
+
+export function init() {
+
+  camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 0.1, 50000 );
   camera.position.z = 500;
   camera.position.y = 50;
   camera.position.x = 0;
-
-  // console.log("THREE",THREE)
 
   controls = new FOUR.OrbitControls( camera );
   controls.addEventListener( 'change', render );
@@ -90,7 +107,7 @@ function init() {
 	scene.add( shadowCameraHelper );
 
   renderer = new THREE.WebGLRenderer( { antialias: true } );
-  renderer.setClearColor( 0xd5efe1 );
+  renderer.setClearColor( 0x000000 );
   renderer.setSize( window.innerWidth, window.innerHeight );
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -117,11 +134,14 @@ function move() {
   // spotLight.rotation.y += 0.01;
   // cube.rotation.x += 0.01;
   // cube.rotation.y += 0.01;
-  if(counter % )console.log("counter",counter)
-  
-  cube.position.y -= 0.4
-  render();
-  requestAnimationFrame( move );
+  // if(counter % )console.log("counter",counter)
+  if (start)  {
+    counter++
+    console.log("counter",counter)
+    cube.position.y -= 0.8
+    render();
+    requestAnimationFrame( move )
+  }
 }
 
 function render() {

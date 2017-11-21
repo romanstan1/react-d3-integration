@@ -14,11 +14,7 @@ var FOUR = {
 }
 
 // THREE.something = 'something'
-
-console.log("THREE",THREE)
-
-
-
+// console.log("THREE",THREE)
 // THREE.OrbitControls.prototype = Object.create( THREE.EventDispatcher.prototype );
 
 FOUR.OrbitControls = function ( object, domElement ) {
@@ -34,6 +30,8 @@ FOUR.OrbitControls = function ( object, domElement ) {
 
 	this.userZoom = true;
 	this.userZoomSpeed = 1.0;
+
+	this.animationSpeed = 4;
 
 	this.userRotate = true;
 	this.userRotateSpeed = 1.0;
@@ -81,77 +79,35 @@ FOUR.OrbitControls = function ( object, domElement ) {
 
 	var changeEvent = { type: 'change' };
 
-
 	this.rotateLeft = function ( angle ) {
-
-		if ( angle === undefined ) {
-
-			angle = getAutoRotationAngle();
-
-		}
-
+		if ( angle === undefined ) angle = getAutoRotationAngle()
 		thetaDelta -= angle;
-
 	};
 
 	this.rotateRight = function ( angle ) {
-
-		if ( angle === undefined ) {
-
-			angle = getAutoRotationAngle();
-
-		}
-
+		if ( angle === undefined ) angle = getAutoRotationAngle()
 		thetaDelta += angle;
-
 	};
 
 	this.rotateUp = function ( angle ) {
-
-		if ( angle === undefined ) {
-
-			angle = getAutoRotationAngle();
-
-		}
-
+		if ( angle === undefined ) angle = getAutoRotationAngle()
 		phiDelta -= angle;
-
 	};
 
 	this.rotateDown = function ( angle ) {
-
-		if ( angle === undefined ) {
-
-			angle = getAutoRotationAngle();
-
-		}
-
+		if ( angle === undefined ) angle = getAutoRotationAngle();
 		phiDelta += angle;
-
 	};
 
 	this.zoomIn = function ( zoomScale ) {
 
-		if ( zoomScale === undefined ) {
-
-			zoomScale = getZoomScale();
-
-		}
-
+		if ( zoomScale === undefined ) zoomScale = getZoomScale();
 		scale /= zoomScale;
-
 	};
 
 	this.zoomOut = function ( zoomScale ) {
-
-		if ( zoomScale === undefined ) {
-
-			zoomScale = getZoomScale();
-
-		}
-
+		if ( zoomScale === undefined ) zoomScale = getZoomScale()
 		scale *= zoomScale;
-
 	};
 
 	this.pan = function ( distance ) {
@@ -168,32 +124,19 @@ FOUR.OrbitControls = function ( object, domElement ) {
 
 		var position = this.object.position;
 		var offset = position.clone().sub( this.center );
-
 		// angle from z-axis around y-axis
-
 		var theta = Math.atan2( offset.x, offset.z );
-
 		// angle from y-axis
-
 		var phi = Math.atan2( Math.sqrt( offset.x * offset.x + offset.z * offset.z ), offset.y );
-
-		if ( this.autoRotate ) {
-
-			this.rotateLeft( getAutoRotationAngle() );
-
-		}
+		if ( this.autoRotate ) this.rotateLeft( getAutoRotationAngle() )
 
 		theta += thetaDelta;
 		phi += phiDelta;
-
 		// restrict phi to be between desired limits
 		phi = Math.max( this.minPolarAngle, Math.min( this.maxPolarAngle, phi ) );
-
 		// restrict phi to be betwee EPS and PI-EPS
 		phi = Math.max( EPS, Math.min( Math.PI - EPS, phi ) );
-
 		var radius = offset.length() * scale;
-
 		// restrict radius to be between desired limits
 		radius = Math.max( this.minDistance, Math.min( this.maxDistance, radius ) );
 
@@ -202,7 +145,6 @@ FOUR.OrbitControls = function ( object, domElement ) {
 		offset.z = radius * Math.sin( phi ) * Math.cos( theta );
 
 		position.copy( this.center ).add( offset );
-
 		this.object.lookAt( this.center );
 
 		thetaDelta = 0;
@@ -210,77 +152,47 @@ FOUR.OrbitControls = function ( object, domElement ) {
 		scale = 1;
 
 		if ( lastPosition.distanceTo( this.object.position ) > 0 ) {
-
 			this.dispatchEvent( changeEvent );
-
 			lastPosition.copy( this.object.position );
-
 		}
 
 	};
 
-
 	function getAutoRotationAngle() {
-
 		return 2 * Math.PI / 60 / 60 * scope.autoRotateSpeed;
-
 	}
 
 	function getZoomScale() {
-
 		return Math.pow( 0.95, scope.userZoomSpeed );
-
 	}
 
 	function onMouseDown( event ) {
-
 		if ( scope.enabled === false ) return;
 		if ( scope.userRotate === false ) return;
-
 		event.preventDefault();
-
-		if ( state === STATE.NONE )
-		{
-			if ( event.button === 0 )
-				state = STATE.ROTATE;
-			if ( event.button === 1 )
-				state = STATE.ZOOM;
-			if ( event.button === 2 )
-				state = STATE.PAN;
+		if ( state === STATE.NONE ) {
+			if ( event.button === 0 ) state = STATE.ROTATE;
+			if ( event.button === 1 ) state = STATE.ZOOM;
+			if ( event.button === 2 ) state = STATE.PAN;
 		}
 
-
 		if ( state === STATE.ROTATE ) {
-
 			//state = STATE.ROTATE;
-
 			rotateStart.set( event.clientX, event.clientY );
-
 		} else if ( state === STATE.ZOOM ) {
-
 			//state = STATE.ZOOM;
-
 			zoomStart.set( event.clientX, event.clientY );
-
 		} else if ( state === STATE.PAN ) {
-
 			//state = STATE.PAN;
-
 		}
 
 		document.addEventListener( 'mousemove', onMouseMove, false );
 		document.addEventListener( 'mouseup', onMouseUp, false );
-
 	}
 
 	function onMouseMove( event ) {
-
 		if ( scope.enabled === false ) return;
-
 		event.preventDefault();
-
-
-
 		if ( state === STATE.ROTATE ) {
 
 			rotateEnd.set( event.clientX, event.clientY );
@@ -296,15 +208,8 @@ FOUR.OrbitControls = function ( object, domElement ) {
 			zoomEnd.set( event.clientX, event.clientY );
 			zoomDelta.subVectors( zoomEnd, zoomStart );
 
-			if ( zoomDelta.y > 0 ) {
-
-				scope.zoomIn();
-
-			} else {
-
-				scope.zoomOut();
-
-			}
+			if ( zoomDelta.y > 0 ) scope.zoomIn();
+			else scope.zoomOut();
 
 			zoomStart.copy( zoomEnd );
 
@@ -320,43 +225,24 @@ FOUR.OrbitControls = function ( object, domElement ) {
 	}
 
 	function onMouseUp( event ) {
-
 		if ( scope.enabled === false ) return;
 		if ( scope.userRotate === false ) return;
-
 		document.removeEventListener( 'mousemove', onMouseMove, false );
 		document.removeEventListener( 'mouseup', onMouseUp, false );
-
 		state = STATE.NONE;
-
 	}
 
 	function onMouseWheel( event ) {
-
 		if ( scope.enabled === false ) return;
 		if ( scope.userZoom === false ) return;
-
 		var delta = 0;
 
-		if ( event.wheelDelta ) { // WebKit / Opera / Explorer 9
+		// console.log("event.wheelDelta",event.wheelDelta)
+		if ( event.wheelDelta ) delta = event.wheelDelta;
+		else if ( event.detail ) delta = - event.detail;
 
-			delta = event.wheelDelta;
-
-		} else if ( event.detail ) { // Firefox
-
-			delta = - event.detail;
-
-		}
-
-		if ( delta > 0 ) {
-
-			scope.zoomOut();
-
-		} else {
-
-			scope.zoomIn();
-
-		}
+		if ( delta > 0 ) scope.zoomOut()
+		else scope.zoomIn()
 
 	}
 
@@ -365,21 +251,27 @@ FOUR.OrbitControls = function ( object, domElement ) {
 		if ( scope.enabled === false ) return;
 		if ( scope.userPan === false ) return;
 
-		switch ( event.keyCode ) {
 
-			/*case scope.keys.UP:
-				scope.pan( new THREE.Vector3( 0, 1, 0 ) );
+		// console.log('event.keyCode', event.keyCode, scope.keys)
+		switch ( event.keyCode ) {
+			case 187:
+				scope.animationSpeed = scope.animationSpeed + 0.1
+				break;
+			case 189:
+				scope.animationSpeed = scope.animationSpeed - 0.1
+				break;
+			case scope.keys.UP:
+				scope.pan( new THREE.Vector3( 0, 100, 0 ) );
 				break;
 			case scope.keys.BOTTOM:
-				scope.pan( new THREE.Vector3( 0, - 1, 0 ) );
+				scope.pan( new THREE.Vector3( 0, - 100, 0 ) );
 				break;
 			case scope.keys.LEFT:
-				scope.pan( new THREE.Vector3( - 1, 0, 0 ) );
+				scope.pan( new THREE.Vector3( - 100, 0, 0 ) );
 				break;
 			case scope.keys.RIGHT:
-				scope.pan( new THREE.Vector3( 1, 0, 0 ) );
+				scope.pan( new THREE.Vector3( 100, 0, 0 ) );
 				break;
-			*/
 			case scope.keys.ROTATE:
 				state = STATE.ROTATE;
 				break;
@@ -389,22 +281,19 @@ FOUR.OrbitControls = function ( object, domElement ) {
 			case scope.keys.PAN:
 				state = STATE.PAN;
 				break;
-
+			default: state = STATE.ZOOM;
 		}
-
 	}
 
 	function onKeyUp( event ) {
-
 		switch ( event.keyCode ) {
-
 			case scope.keys.ROTATE:
 			case scope.keys.ZOOM:
 			case scope.keys.PAN:
 				state = STATE.NONE;
 				break;
+			default: state =STATE.NONE
 		}
-
 	}
 
 	this.domElement.addEventListener( 'contextmenu', function ( event ) { event.preventDefault(); }, false );
@@ -413,14 +302,10 @@ FOUR.OrbitControls = function ( object, domElement ) {
 	this.domElement.addEventListener( 'DOMMouseScroll', onMouseWheel, false ); // firefox
 	window.addEventListener( 'keydown', onKeyDown, false );
 	window.addEventListener( 'keyup', onKeyUp, false );
-
 };
 
-
 // const controls = new FOUR.OrbitControls
-
 // console.log('FOUR', FOUR, controls)
-
 
 FOUR.OrbitControls.prototype = Object.create( THREE.EventDispatcher.prototype );
 export default FOUR

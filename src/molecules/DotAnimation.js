@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import {initializeDom, renderDom} from '../d3/dot_animation_functions.js'
-import {init, startstop, reinit} from '../three/dot_animation_three.js'
+import {stop, startstop, reinit} from '../three/dot_animation_three.js'
 
 
 class Graph extends Component {
@@ -18,7 +18,7 @@ export default class DotAnimation extends Component {
     start: false
   }
   componentDidMount() {
-    init()
+    reinit()
   }
   handleStartstop = () => {
     this.setState({start: !this.state.start})
@@ -27,6 +27,9 @@ export default class DotAnimation extends Component {
   handleInit = () => {
     this.setState({start: false})
     reinit()
+  }
+  componentWillUnmount() {
+    stop()
   }
   render() {
     return [

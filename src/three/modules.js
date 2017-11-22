@@ -1,9 +1,12 @@
 import * as THREE from 'three'
-// import * as Threex from 'threex'
+export let halfRowLength = 10
+
+const numberOfCubes = (halfRowLength * 2) * (halfRowLength * 2)
+let halfwayIndex = (numberOfCubes / 2) - 1
+
+console.log("numberOfCubes",numberOfCubes)
 
 export function CreateCubes(cubes, scene) {
-  let numberOfCubes = 400;
-  let halfwayIndex = (numberOfCubes / 2) - 1
 
   const cubesDefinitions = new Array(numberOfCubes).fill({}).map((item, i) => {
       const halfwayBoolean = i > halfwayIndex
@@ -29,7 +32,8 @@ export function CreateCubes(cubes, scene) {
       // color: item.index%10 === 0? 0xffffff : 0xff3855,
       // wireframe: true,
       // wireframe_linewidth: 2,
-      color: 0xb20059,
+      // color: 0xb20059,
+      color: 0x07ccc5,
       // color: 0xffffff,
       dithering: true } )
     const cube = new THREE.Mesh( cubeGeometry, cubeMaterial )
@@ -40,7 +44,11 @@ export function CreateCubes(cubes, scene) {
     scene.add(cube)
 
     var geo = new THREE.EdgesGeometry( cube.geometry ); // or WireframeGeometry
-    var mat = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 1, blending: THREE.AdditiveBlending, transparent: true } );
+    var mat = new THREE.LineBasicMaterial( {
+      // color: 0xffffff,
+      color: 0x07ccc5,
+      linewidth: 1,
+      blending: THREE.AdditiveBlending, transparent: true } );
     var wireframe = new THREE.LineSegments( geo, mat );
    cube.add( wireframe );
 
@@ -59,7 +67,10 @@ export function CreateCubes(cubes, scene) {
 
     // wireframe
     // var geo = new THREE.EdgesGeometry( mesh.geometry ); // or WireframeGeometry
-    // var mat = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 2 } );
+    // var mat = new THREE.LineBasicMaterial( {
+    //   // color: 0xffffff,
+    //   color: 0x07ccc5,
+    //   linewidth: 1 } );
     // var wireframe = new THREE.LineSegments( geo, mat );
     // mesh.add( wireframe );
   })

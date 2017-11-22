@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {stop, startstop, reinit, helper} from '../three/dot_animation_three.js'
+import {stop, startstop, reinit, helper, nextAct} from '../three/dot_animation_three.js'
 
 
 class Graph extends Component {
@@ -13,7 +13,8 @@ class Graph extends Component {
 
 export default class DotAnimation extends Component {
   state = {
-    start: false
+    start: false,
+    act:1
   }
   componentDidMount() {
     reinit()
@@ -23,11 +24,16 @@ export default class DotAnimation extends Component {
     startstop()
   }
   handleInit = () => {
-    this.setState({start: false})
+    this.setState({start: false, act: 1})
     reinit()
+    nextAct(1)
   }
   handleHelper = () => {
     helper()
+  }
+  handleNextact = () => {
+    this.setState({act: this.state.act + 1})
+    nextAct(this.state.act + 1)
   }
   componentWillUnmount() {
     stop()
@@ -36,7 +42,8 @@ export default class DotAnimation extends Component {
     return [
       <div key='init' style={{right: '100px'}} className='draw-button' onClick={this.handleStartstop}>{this.state.start? 'Stop' : 'Start' }</div>,
       <div key='startstop' className='draw-button' onClick={this.handleInit}> Re-Init</div>,
-      <div style={{right: '300px', width: '150px'}} key='helper' className='draw-button' onClick={this.handleHelper}> Light & Shadow Helpers</div>,
+      <div style={{right: '190px', width: '150px'}} key='helper' className='draw-button' onClick={this.handleHelper}> Light & Shadow Helpers</div>,
+      <div style={{top:'40px', width: '150px'}} key='next' className='draw-button' onClick={this.handleNextact}> Current Act {this.state.act} - Next</div>,
       <Graph key='graph'/>
     ]
   }

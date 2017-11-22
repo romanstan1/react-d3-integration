@@ -6,11 +6,11 @@ import {positionChange} from './sequence_functions.js'
 var container, camera, controls, scene, renderer
 // var shadowCameraHelper
 // var lightHelper, lightHelper2, spotLight, spotLight2
-var counter = 0
 var cubes = []
 var frameRequest
 var helperBoolean = false
 var start = false;
+let act = 1
 
 function run() {
   animate()
@@ -19,7 +19,6 @@ function run() {
 
 export function reinit () {
   start = false
-  console.log("reinit")
   const element = document.getElementById( 'dot-canvas' )
   const parent = element.parentNode
   parent.removeChild(element)
@@ -27,12 +26,14 @@ export function reinit () {
   node.id = 'dot-canvas'
   parent.appendChild(node)
 
-  counter = 0
   stop()
   cubes = []
   init()
 }
 
+export function nextAct(incomingAct) {
+  act = incomingAct
+}
 export function stop() {
   cancelAnimationFrame(frameRequest);
 }
@@ -96,10 +97,9 @@ function animate() {
 
 function move() {
   if (start)  {
-    counter++
 
     cubes.forEach((cube, i) => {
-      const newPosition = positionChange('x', cube, counter, controls.animationSpeed)
+      const newPosition = positionChange(cube, controls.animationSpeed, act)
       cube.position.set(newPosition.x, newPosition.y, newPosition.z)
     })
 

@@ -18,8 +18,7 @@ div.dot-animation {
   div.dot-animation canvas {
     height: 100%;
     width: 100%;
-    background: red;
-    background-image: radial-gradient(#273447, #17202d, #070a0f);
+    background: #070a0f;
     margin: 0px;
     overflow: hidden; }
 

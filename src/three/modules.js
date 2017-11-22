@@ -13,7 +13,7 @@ export function CreateCubes(cubes, scene) {
       return {
         ...item,
         color: 'ff0000',
-        size: { 'x': 4, 'y': 4,'z': 2 },
+        size: { 'x': 4, 'y': 4,'z': 1 },
         direction: { x: 0, y: -1, z: 0},
         team: halfwayBoolean? 'right' : 'left',
         index: halfwayBoolean? i - halfwayIndex - 1  : i,
@@ -29,11 +29,14 @@ export function CreateCubes(cubes, scene) {
     const cubeGeometry = new THREE.BoxGeometry(item.size.x, item.size.y, item.size.z)
     // const cubeMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, dithering: true } )
     const cubeMaterial = new THREE.MeshStandardMaterial( {
-      // color: item.index%10 === 0? 0xffffff : 0xff3855,
+      // color: item.index%halfRowLength === 0? 0xffffff : 0x07ccc5,
+      color: item.index%halfRowLength === (halfRowLength - 1)?
+      0xb20059 : item.index%halfRowLength === 0? // b20059 is pink
+      0xffffff : 0x07ccc5, // ffffff is white
       // wireframe: true,
       // wireframe_linewidth: 2,
       // color: 0xb20059,
-      color: 0x07ccc5,
+      // color: 0x07ccc5,
       // color: 0xffffff,
       dithering: true } )
     const cube = new THREE.Mesh( cubeGeometry, cubeMaterial )

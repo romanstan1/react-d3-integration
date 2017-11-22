@@ -9,7 +9,7 @@ var container, camera, controls, scene, renderer
 var counter = 0
 var cubes = []
 var frameRequest
-var helperBoolean = true
+var helperBoolean = false
 var start = false;
 
 function run() {
@@ -70,9 +70,9 @@ function init() {
 
   const instantiateLights = new CreateLights(scene, helperBoolean)
   scene = instantiateLights.scene
-
-  renderer = new THREE.WebGLRenderer( { antialias: true } );
-  renderer.setClearColor( 0x000000 );
+  // renderer = new THREE.CanvasRenderer( { alpha: true }); // gradient
+  renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+  // renderer.setClearColor( 0x000000 );
   renderer.setSize( window.innerWidth, window.innerHeight );
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;

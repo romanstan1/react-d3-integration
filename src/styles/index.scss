@@ -25,6 +25,10 @@ div.dot-animation{
   canvas {
     height: 100%;
     width: 100%;
+    background: red;
+    background-image: radial-gradient(#273447, #17202d, #070a0f);
+    margin: 0px;
+    overflow: hidden;
   }
 }
 
@@ -40,25 +44,31 @@ div.error {
 }
 div.navigation {
   position: absolute;
-  width: 220px;
+  width: 15px;
+  transition: 0.1s ease;
+  overflow: hidden;
   div {
     a {
+      border-left: 2px solid white;
       line-height: 20px;
       height: 20px;
       // margin-left: 10px;
-      background: $link;
-      width: 100%;
+      // background: $link;
+      width: 220px;
       font-size: 12px;
-      text-indent: 10px;
+      text-indent: 15px;
       text-transform: uppercase;
       display: block;
       color: #eff1f2;
       text-decoration: none;
-      opacity: 0.4;
+      opacity: 0.7;
       &:hover {
-        opacity: 0.9;
+        opacity: 1;
       }
     }
+  }
+  &:hover {
+      width: 220px;
   }
 }
 div#flare{

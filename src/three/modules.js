@@ -27,16 +27,41 @@ export function CreateCubes(cubes, scene) {
     // const cubeMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, dithering: true } )
     const cubeMaterial = new THREE.MeshStandardMaterial( {
       // color: item.index%10 === 0? 0xffffff : 0xff3855,
-      wireframe: true,
-      wireframe_linewidth: 2,
+      // wireframe: true,
+      // wireframe_linewidth: 2,
       color: 0xb20059,
+      // color: 0xffffff,
       dithering: true } )
-    const cube= new THREE.Mesh( cubeGeometry, cubeMaterial )
+    const cube = new THREE.Mesh( cubeGeometry, cubeMaterial )
     cube.position.set( item.position.x, item.position.y + (item.size.y * item.index), item.position.z)
     cube.userData = {direction: item.direction, team: item.team, index: item.index, size: item.size}
     // cube.castShadow = true;
     cubes.push(cube)
     scene.add(cube)
+
+    var geo = new THREE.EdgesGeometry( cube.geometry ); // or WireframeGeometry
+    var mat = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 1, blending: THREE.AdditiveBlending, transparent: true } );
+    var wireframe = new THREE.LineSegments( geo, mat );
+   cube.add( wireframe );
+
+
+    // var line = new THREE.Line( geometry, new THREE.LineBasicMaterial( { color: 0xffffff, opacity: 0.5 } ) );
+    // scene.add( line );
+
+    // var material = new THREE.MeshPhongMaterial( {
+    // color: 0xff0000,
+    // polygonOffset: true,
+    // polygonOffsetFactor: 1, // positive value pushes polygon further away
+    // polygonOffsetUnits: 1
+    // } );
+    // var mesh = new THREE.Mesh( geometry, material );
+    // scene.add( mesh )
+
+    // wireframe
+    // var geo = new THREE.EdgesGeometry( mesh.geometry ); // or WireframeGeometry
+    // var mat = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 2 } );
+    // var wireframe = new THREE.LineSegments( geo, mat );
+    // mesh.add( wireframe );
   })
 
   // const geometry = new THREE.BoxGeometry(20, 30, 30)

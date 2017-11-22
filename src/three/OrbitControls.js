@@ -31,7 +31,7 @@ FOUR.OrbitControls = function ( object, domElement ) {
 	this.userZoom = true;
 	this.userZoomSpeed = 1.0;
 
-	this.animationSpeed = 4;
+	this.animationSpeed = 12;
 
 	this.userRotate = true;
 	this.userRotateSpeed = 1.0;
@@ -255,10 +255,10 @@ FOUR.OrbitControls = function ( object, domElement ) {
 		// console.log('event.keyCode', event.keyCode, scope.keys)
 		switch ( event.keyCode ) {
 			case 187:
-				scope.animationSpeed = scope.animationSpeed + 0.1
+				scope.animationSpeed = scope.animationSpeed + 1
 				break;
 			case 189:
-				scope.animationSpeed = scope.animationSpeed - 0.1
+				scope.animationSpeed = scope.animationSpeed - 1
 				break;
 			case scope.keys.UP:
 				scope.pan( new THREE.Vector3( 0, 100, 0 ) );

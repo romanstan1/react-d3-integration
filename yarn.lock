@@ -6533,6 +6533,10 @@ three@^0.88.0:
   version "0.88.0"
   resolved "https://registry.yarnpkg.com/three/-/three-0.88.0.tgz#4256c2fc38e4fb23a0d23eba2b6cce4df8e466d5"
 
+threex@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/threex/-/threex-1.0.0.tgz#c85057d519bf201410ba64418ce488a78cf60eca"
+
 throat@^3.0.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/throat/-/throat-3.2.0.tgz#50cb0670edbc40237b9e347d7e1f88e4620af836"

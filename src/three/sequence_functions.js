@@ -31,49 +31,40 @@ const actOne = (cube, velocity) => {
     z: cube.position.z + (z * velocity)
   }
 }
+
 let value = true
 let value2 = true
+
 const actTwo = (cube, velocity) => {
   let y = 1.1
   let x = 1.5
   let z = 0
-  let overRideX
-  let overRideY
-  const gapSize = 8 
+  const gapSize = 8
   const centeringTheCube = (halfRowLength * cube.userData.size.y) - 1
   const cubeRow = Math.floor(cube.userData.index / halfRowLength)
   const rowRedirect = -centeringTheCube + (cubeRow * cube.userData.size.y)
 
-  overRideY = rowRedirect * gapSize
+  let direction = -1
+  if(cube.userData.team === 'right') direction = 1
 
-  if(cube.userData.team === 'right') {
-    overRideX = (((cube.userData.index % halfRowLength) * cube.userData.size.x) + 2) * gapSize
-    if(cube.position.x < overRideX) overRideX = cube.position.x + (x * velocity)
+  // set x and y targets
+  let overRideY = rowRedirect * gapSize
+  let overRideX = (((cube.userData.index % halfRowLength) * cube.userData.size.x) + 2) * (gapSize * direction)
 
-// refactor --
-    if(cubeRow < halfRowLength) {
-      if( cube.position.y > overRideY ) overRideY = cube.position.y - (y * velocity)
-    } else if (cubeRow >= halfRowLength) {
-      if( cube.position.y < overRideY ) overRideY = cube.position.y + (y * velocity)
-    }
-// refactor --
-  }
-  if(cube.userData.team === 'left') {
-    overRideX = (((cube.userData.index % halfRowLength) * cube.userData.size.x) + 2) * -gapSize
-    if(cube.position.x > overRideX) overRideX = cube.position.x - (x * velocity)
+  const yIncrement = (y * velocity)
+  const xIncrement = (x * velocity)
 
-// refactor --
-    if(cubeRow < halfRowLength) {
-      if( cube.position.y > overRideY ) overRideY = cube.position.y - (y * velocity)
-    } else if (cubeRow >= halfRowLength) {
-      if( cube.position.y < overRideY ) overRideY = cube.position.y + (y * velocity)
-    }
-// refactor --
-  }
+  // iterate to x position
+  if(cube.userData.team === 'right' && cube.position.x < overRideX) overRideX = cube.position.x + xIncrement
+  else if(cube.userData.team === 'left' && cube.position.x > overRideX) overRideX = cube.position.x - xIncrement
+
+  // iterate to y position
+  if(cubeRow < halfRowLength && cube.position.y > overRideY) overRideY = cube.position.y - yIncrement
+  else if(cubeRow >= halfRowLength && cube.position.y < overRideY) overRideY = cube.position.y + yIncrement
 
   return {
-    x: overRideX || cube.position.x + (x * velocity),
-    y: overRideY || cube.position.y + (y * velocity),
+    x: overRideX || cube.position.x + xIncrement,
+    y: overRideY || cube.position.y + yIncrement,
     z: cube.position.z + (z * velocity)
   }
 }

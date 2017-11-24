@@ -79,12 +79,12 @@ const actTwo = (cube, velocity) => {
   const xEased = cubicOut(xVal)
   const newXIncrement = (xEased/xVal)
 
-  if(value && cube.userData.index === 0) {
-    console.log("xPrior, xTarget", xPrior, xTarget)
-    console.log("xAbs, xVal, xEased", xAbs, xVal, xEased, newXIncrement)
-    console.log("yDirection", yDirection)
-    value = false
-  }
+  // if(value && cube.userData.index === 0) {
+  //   console.log("xPrior, xTarget", xPrior, xTarget)
+  //   console.log("xAbs, xVal, xEased", xAbs, xVal, xEased, newXIncrement)
+  //   console.log("yDirection", yDirection)
+  //   value = false
+  // }
 
   let overRideX = xTarget
   let overRideY = yTarget
@@ -112,11 +112,19 @@ const actThree = (cube, velocity) => {
   let overRideY
 
   if(cube.userData.team === 'left' && cube.userData.index < 5) {
+    overRideX = cube.userData.size.x * cube.userData.index
+    overRideY = 0
+    if(value && cube.userData.index === 0) {
+      console.log("cube", cube)
+      value = false
+    }
+
+
 
   } else {
-    x = _.random(-0.5, 0.5)
-    y = _.random(-0.5, 0.5)
-    z = _.random(-0.5, 0.5)
+    x = 2
+    y = 2
+    z = 0
 
   }
   return {

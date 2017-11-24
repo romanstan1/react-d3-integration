@@ -2,6 +2,8 @@ import * as THREE from 'three'
 import FOUR from './OrbitControls.js'
 import {CreateCubes, CreateLights} from './modules.js'
 import {positionChange} from './sequence_functions.js'
+import THREEx from './THREEx.js'
+
 
 var container, camera, controls, scene, renderer
 // var shadowCameraHelper
@@ -61,13 +63,14 @@ function init() {
   // camera.rotation.x = 0;
   // camera.lookAt(new THREE.Vector3(200,200,0));
 
+  THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
+
+	// var domEvents	= new THREEx.DomEvents(camera, renderer.domElement)
+
   controls = new FOUR.OrbitControls( camera );
   controls.addEventListener( 'change', render );
   scene = new THREE.Scene();
 
-  const instantiateCubes = new CreateCubes(cubes, scene)
-  cubes = instantiateCubes.cubes
-  scene = instantiateCubes.scene
 
   const instantiateLights = new CreateLights(scene, helperBoolean)
   scene = instantiateLights.scene
@@ -77,6 +80,10 @@ function init() {
   renderer.setSize( window.innerWidth, window.innerHeight );
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  const instantiateCubes = new CreateCubes(cubes, scene, camera, renderer)
+  cubes = instantiateCubes.cubes
+  scene = instantiateCubes.scene
 
   container = document.getElementById( 'dot-canvas' );
   container.appendChild( renderer.domElement );

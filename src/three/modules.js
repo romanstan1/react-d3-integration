@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+import THREEx from './THREEx.js'
+
 export let halfRowLength = 5
 
 const numberOfCubes = (halfRowLength * 2) * (halfRowLength * 2)
@@ -6,7 +8,9 @@ let halfwayIndex = (numberOfCubes / 2) - 1
 
 console.log("numberOfCubes",numberOfCubes)
 
-export function CreateCubes(cubes, scene) {
+export function CreateCubes(cubes, scene, camera, renderer) {
+
+  var domEvents	= new THREEx.DomEvents(camera, renderer.domElement)
 
   const cubesDefinitions = new Array(numberOfCubes).fill({}).map((item, i) => {
       const halfwayBoolean = i > halfwayIndex
@@ -28,8 +32,6 @@ export function CreateCubes(cubes, scene) {
         },
       }
     })
-  console.log("cubesDefinitions",cubesDefinitions)
-
 
   cubesDefinitions.forEach( (item, i) => {
     const cubeGeometry = new THREE.BoxGeometry(item.size.x, item.size.y, item.size.z)
@@ -49,17 +51,22 @@ export function CreateCubes(cubes, scene) {
     cube.position.set( item.position.x, item.position.y + (item.size.y * item.index), item.position.z)
     cube.userData = {direction: item.direction, team: item.team, index: item.index, size: item.size, centralProximity: item.centralProximity, rowIndex: item.rowIndex}
     // cube.castShadow = true;
+
+    domEvents.addEventListener(cube, 'click', function(event){
+  		console.log('you clicked on cube', cube)
+  	}, false)
+
     cubes.push(cube)
     scene.add(cube)
 
-    var geo = new THREE.EdgesGeometry( cube.geometry ); // or WireframeGeometry
-    var mat = new THREE.LineBasicMaterial( {
-      // color: 0xffffff,
-      color: 0x07ccc5,
-      linewidth: 1,
-      blending: THREE.AdditiveBlending, transparent: true } );
-    var wireframe = new THREE.LineSegments( geo, mat );
-   cube.add( wireframe );
+   //  var geo = new THREE.EdgesGeometry( cube.geometry ); // or WireframeGeometry
+   //  var mat = new THREE.LineBasicMaterial( {
+   //    // color: 0xffffff,
+   //    color: 0x07ccc5,
+   //    linewidth: 1,
+   //    blending: THREE.AdditiveBlending, transparent: true } );
+   //  var wireframe = new THREE.LineSegments( geo, mat );
+   // cube.add( wireframe );
 
 
     // var line = new THREE.Line( geometry, new THREE.LineBasicMaterial( { color: 0xffffff, opacity: 0.5 } ) );

@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-export let halfRowLength = 10
+export let halfRowLength = 5
 
 const numberOfCubes = (halfRowLength * 2) * (halfRowLength * 2)
 let halfwayIndex = (numberOfCubes / 2) - 1
@@ -10,13 +10,17 @@ export function CreateCubes(cubes, scene) {
 
   const cubesDefinitions = new Array(numberOfCubes).fill({}).map((item, i) => {
       const halfwayBoolean = i > halfwayIndex
+      const index = halfwayBoolean? i - halfwayIndex - 1  : i
+      const rowIndex = Math.floor(index/halfRowLength)
       return {
         ...item,
         color: 'ff0000',
         size: { 'x': 4, 'y': 4,'z': 1 },
         direction: { x: 0, y: -1, z: 0},
         team: halfwayBoolean? 'right' : 'left',
-        index: halfwayBoolean? i - halfwayIndex - 1  : i,
+        index: index,
+        rowIndex: rowIndex,
+        centralProximity: halfRowLength - rowIndex,
         position: {
           'x': halfwayBoolean? 2 : -2,
           'y': 300,
@@ -24,6 +28,8 @@ export function CreateCubes(cubes, scene) {
         },
       }
     })
+  console.log("cubesDefinitions",cubesDefinitions)
+
 
   cubesDefinitions.forEach( (item, i) => {
     const cubeGeometry = new THREE.BoxGeometry(item.size.x, item.size.y, item.size.z)
@@ -41,7 +47,7 @@ export function CreateCubes(cubes, scene) {
       dithering: true } )
     const cube = new THREE.Mesh( cubeGeometry, cubeMaterial )
     cube.position.set( item.position.x, item.position.y + (item.size.y * item.index), item.position.z)
-    cube.userData = {direction: item.direction, team: item.team, index: item.index, size: item.size}
+    cube.userData = {direction: item.direction, team: item.team, index: item.index, size: item.size, centralProximity: item.centralProximity, rowIndex: item.rowIndex}
     // cube.castShadow = true;
     cubes.push(cube)
     scene.add(cube)

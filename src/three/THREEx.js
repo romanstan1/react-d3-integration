@@ -92,7 +92,6 @@ THREEx.FullScreen.bindKey	= function(opts){
 	}
 
 	var onKeyPress	= function(event){
-		console.log("onKeyPress",event)
 		if( event.which !== charCode )	return;
 		toggle();
 	}.bind(this);

@@ -54,7 +54,7 @@ export function startstop() {
 function init() {
   camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 0.1, 50000 );
   camera.position.z = 960;
-  camera.position.y = 50;
+  camera.position.y = 0;
   camera.position.x = 0;
 
   // camera.useTarget = false;

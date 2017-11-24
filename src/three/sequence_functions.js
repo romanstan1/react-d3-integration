@@ -3,15 +3,17 @@ import * as d3 from 'd3'
 import {cubicOut, cubicIn,linear, cubicInOut, elasticInOut, quartInOut, quartIn, quartOut} from 'eases'
 import _ from 'lodash'
 
+let value = true
+let value2 = true
+
 const actOne = (cube, velocity) => {
   let y = -1
   let x = 0
   let z = 0
   let overRideX
   let overRideY
-  const centeringTheCube = (halfRowLength * cube.userData.size.y) - 1
-  const cubeRow = Math.floor(cube.userData.index / halfRowLength)
-  const rowRedirect = -centeringTheCube + (cubeRow * cube.userData.size.y)
+  const centeringTheCube = (halfRowLength * cube.userData.size.y) - 2
+  const rowRedirect = (cube.userData.rowIndex * cube.userData.size.y) - centeringTheCube
   const colRedirect = (cube.userData.index % halfRowLength) * cube.userData.size.x
 
   if(cube.position.y <= rowRedirect && cube.userData.team === 'left') {
@@ -35,39 +37,54 @@ const actOne = (cube, velocity) => {
   }
 }
 
-let value = true
-let value2 = true
 
 // if(value && cube.userData.index === 0) {
 //   console.log("cube",cube)
 //   value = false
 // }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 const actTwo = (cube, velocity) => {
   let y = 1
   let x = 1
   let z = 0
   const gapSize = 8
-  const rowRedirect = cube.userData.centralProximity + (cube.userData.rowIndex * cube.userData.size.y)
 
   let direction = -1
     if(cube.userData.team === 'right') direction = 1
 
+  const yDirection = cube.userData.centralProximity / Math.abs(cube.userData.centralProximity)
+
 // establish prior positions for x and y
-  let yPrior = cube.userData.centralProximity + (cube.userData.rowIndex * cube.userData.size.y)
+  const centeringTheCube = (halfRowLength * cube.userData.size.y) - 2
+  const rowRedirect = (cube.userData.rowIndex * cube.userData.size.y) - centeringTheCube
+
+  // let yPrior = cube.userData.centralProximity + (cube.userData.rowIndex * cube.userData.size.y)
+  let yPrior = rowRedirect * -1
   let xPrior = (cube.userData.index % halfRowLength) * cube.userData.size.x
     if(cube.userData.team === 'right' ) xPrior = xPrior + 2
     else xPrior = (xPrior * direction) - 2
 
 // targets for x and y
   const xTarget =  xPrior * gapSize
-  const yTarget = cube.userData.centralProximity * cube.userData.size.y * gapSize
+  const yTarget = (cube.userData.centralProximity - (yDirection * 0.5)) * cube.userData.size.y * gapSize
 
 // ease and increment to positions
   const xScale = d3.scaleLinear().domain([xPrior, xTarget])
   const yScale = d3.scaleLinear().domain([yPrior, yTarget])
 
-  const yDirection = cube.userData.centralProximity / Math.abs(cube.userData.centralProximity)
 
   const yAbs = cube.position.y + (y * yDirection)
   const yVal = yScale(yAbs)
@@ -79,13 +96,6 @@ const actTwo = (cube, velocity) => {
   const xEased = cubicOut(xVal)
   const newXIncrement = (xEased/xVal)
 
-  // if(value && cube.userData.index === 0) {
-  //   console.log("xPrior, xTarget", xPrior, xTarget)
-  //   console.log("xAbs, xVal, xEased", xAbs, xVal, xEased, newXIncrement)
-  //   console.log("yDirection", yDirection)
-  //   value = false
-  // }
-
   let overRideX = xTarget
   let overRideY = yTarget
 
@@ -95,6 +105,19 @@ const actTwo = (cube, velocity) => {
   if(yTarget > cube.position.y + newYIncrement) overRideY = cube.position.y + newYIncrement
   else if (yTarget < cube.position.y - newYIncrement) overRideY = cube.position.y - newYIncrement
 
+  if(value && cube.userData.team === 'right' && cube.userData.index === 4) {
+    // console.log("cube 4",cube, cube.position, newYIncrement, yAbs, yVal)
+    console.log("cube 49 p and t",yPrior, yTarget, cube.userData.centralProximity )
+    // console.log("prox, row index, size", cube.userData.centralProximity, cube.userData.rowIndex, cube.userData.size.y)
+
+    value = false
+  }
+  if(value2 && cube.userData.team === 'right' && cube.userData.index === 49) {
+    // console.log("cube 49",cube, cube.position, newYIncrement, yAbs, yVal)
+    console.log("cube 49 p and t",yPrior, yTarget, cube.userData.centralProximity )
+    // console.log("prox, row index, size", cube.userData.centralProximity, cube.userData.rowIndex, cube.userData.size.y)
+    value2 = false
+  }
   return {
     x: overRideX,
     y: overRideY,
@@ -114,22 +137,15 @@ const actThree = (cube, velocity) => {
   if(cube.userData.team === 'left' && cube.userData.index < 5) {
     overRideX = cube.userData.size.x * cube.userData.index
     overRideY = 0
-    if(value && cube.userData.index === 0) {
-      console.log("cube", cube)
-      value = false
-    }
-
-
-
   } else {
-    x = 2
-    y = 2
-    z = 0
-
+    overRideX = 100
+    overRideY = 100
   }
   return {
-    x: overRideX || cube.position.x + (x * velocity),
-    y: overRideY || cube.position.y + (y * velocity),
+    x: overRideX,
+    y: overRideY,
+    // x: overRideX || cube.position.x + (x * velocity),
+    // y: overRideY || cube.position.y + (y * velocity),
     z: cube.position.z + (z * velocity)
   }
 }

@@ -9,9 +9,7 @@ let halfwayIndex = (numberOfCubes / 2) - 1
 console.log("numberOfCubes",numberOfCubes)
 
 export function CreateCubes(cubes, scene, camera, renderer) {
-
   var domEvents	= new THREEx.DomEvents(camera, renderer.domElement)
-
   const cubesDefinitions = new Array(numberOfCubes).fill({}).map((item, i) => {
       const halfwayBoolean = i > halfwayIndex
       const index = halfwayBoolean? i - halfwayIndex - 1  : i
@@ -24,7 +22,7 @@ export function CreateCubes(cubes, scene, camera, renderer) {
         team: halfwayBoolean? 'right' : 'left',
         index: index,
         rowIndex: rowIndex,
-        centralProximity: halfRowLength - rowIndex,
+        centralProximity: rowIndex < 5 ? halfRowLength - rowIndex : halfRowLength - rowIndex - 1,
         position: {
           'x': halfwayBoolean? 2 : -2,
           'y': 300,
@@ -53,55 +51,21 @@ export function CreateCubes(cubes, scene, camera, renderer) {
     // cube.castShadow = true;
 
     domEvents.addEventListener(cube, 'click', function(event){
-  		console.log('you clicked on cube', cube)
+  		console.log('you clicked on cube', cube, item.index, cube.position)
   	}, false)
 
     cubes.push(cube)
     scene.add(cube)
 
-   //  var geo = new THREE.EdgesGeometry( cube.geometry ); // or WireframeGeometry
-   //  var mat = new THREE.LineBasicMaterial( {
-   //    // color: 0xffffff,
-   //    color: 0x07ccc5,
-   //    linewidth: 1,
-   //    blending: THREE.AdditiveBlending, transparent: true } );
-   //  var wireframe = new THREE.LineSegments( geo, mat );
-   // cube.add( wireframe );
-
-
-    // var line = new THREE.Line( geometry, new THREE.LineBasicMaterial( { color: 0xffffff, opacity: 0.5 } ) );
-    // scene.add( line );
-
-    // var material = new THREE.MeshPhongMaterial( {
-    // color: 0xff0000,
-    // polygonOffset: true,
-    // polygonOffsetFactor: 1, // positive value pushes polygon further away
-    // polygonOffsetUnits: 1
-    // } );
-    // var mesh = new THREE.Mesh( geometry, material );
-    // scene.add( mesh )
-
-    // wireframe
-    // var geo = new THREE.EdgesGeometry( mesh.geometry ); // or WireframeGeometry
-    // var mat = new THREE.LineBasicMaterial( {
-    //   // color: 0xffffff,
-    //   color: 0x07ccc5,
-    //   linewidth: 1 } );
-    // var wireframe = new THREE.LineSegments( geo, mat );
-    // mesh.add( wireframe );
-  })
-
-  // const geometry = new THREE.BoxGeometry(20, 30, 30)
-  // const material = new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true, wireframe_linewidth: 2 } );
-  // const cube = new THREE.Mesh( geometry, material )
-  // cube.position.set(0,0,0)
-  // scene.add(cube)
-
-  // const cubeGeometry2 = new THREE.BoxGeometry(1, 1, 3)
-  // const cubeMaterial2 = new THREE.MeshStandardMaterial( {color: 0x1d15f2,dithering: true } )
-  // const cube2 = new THREE.Mesh( cubeGeometry2, cubeMaterial2 )
-  // cube2.position.set(0,0,5)
-  // scene.add(cube2)
+    var geo = new THREE.EdgesGeometry( cube.geometry ); // or WireframeGeometry
+    var mat = new THREE.LineBasicMaterial( {
+      // color: 0xffffff,
+      color: 0x07ccc5,
+      linewidth: 1,
+      blending: THREE.AdditiveBlending, transparent: true } );
+    var wireframe = new THREE.LineSegments( geo, mat );
+   cube.add( wireframe );
+ })
 
   this.cubes = cubes
   this.scene = scene
@@ -163,17 +127,8 @@ export function CreateLights(scene, helper) {
     scene.add( shadowCameraHelper );
   }
 
-
   this.scene = scene
 }
-
-
-
-
-
-
-
-
 
 
 

@@ -33,12 +33,12 @@ FOUR.OrbitControls = function ( object, domElement ) {
 
 	this.animationSpeed = 12;
 	this.direction = {
-		'threeD':0,
-		'twoD':1,
+		threeD:0,
+		twoD:1,
 	};
-	  // 0
-//3			// 1
-		// 2
+		  // 0
+	//3			// 1
+			// 2
 	this.userRotate = true;
 	this.userRotateSpeed = 1.0;
 

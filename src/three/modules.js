@@ -18,7 +18,7 @@ export function CreateCubes(cubes, scene, camera, renderer) {
         ...item,
         color: 'ff0000',
         size: { 'x': 4, 'y': 4,'z': 1 },
-        direction: { x: 0, y: -1, z: 0},
+        direction: { x: 1, y: 0, z: 0},
         team: halfwayBoolean? 'right' : 'left',
         index: index,
         rowIndex: rowIndex,

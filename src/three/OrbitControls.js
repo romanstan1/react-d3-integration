@@ -31,7 +31,7 @@ FOUR.OrbitControls = function ( object, domElement ) {
 	this.userZoom = true;
 	this.userZoomSpeed = 1.0;
 
-	this.animationSpeed = 12;
+	this.animationSpeed = 10;
 	this.direction = {
 		threeD:0,
 		twoD:1,

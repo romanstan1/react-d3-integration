@@ -106,7 +106,7 @@ function move() {
   if (start)  {
 
     cubes.forEach((cube, i) => {
-      const newPosition = positionChange(cube, controls.animationSpeed, act)
+      const newPosition = positionChange(cube, controls, act )
       cube.position.set(newPosition.x, newPosition.y, newPosition.z)
     })
 

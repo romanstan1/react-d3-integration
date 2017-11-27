@@ -32,7 +32,13 @@ FOUR.OrbitControls = function ( object, domElement ) {
 	this.userZoomSpeed = 1.0;
 
 	this.animationSpeed = 12;
-
+	this.direction = {
+		'threeD':0,
+		'twoD':1,
+	};
+	  // 0
+//3			// 1
+		// 2
 	this.userRotate = true;
 	this.userRotateSpeed = 1.0;
 
@@ -261,16 +267,19 @@ FOUR.OrbitControls = function ( object, domElement ) {
 				scope.animationSpeed = scope.animationSpeed - 1
 				break;
 			case scope.keys.UP:
-				scope.pan( new THREE.Vector3( 0, 100, 0 ) );
+				scope.direction.threeD = 1
+				// scope.pan( new THREE.Vector3( 0, 100, 0 ) );
 				break;
 			case scope.keys.BOTTOM:
-				scope.pan( new THREE.Vector3( 0, - 100, 0 ) );
+				scope.direction.threeD = -1
 				break;
 			case scope.keys.LEFT:
-				scope.pan( new THREE.Vector3( - 100, 0, 0 ) );
+				if(scope.direction.twoD !== 0) scope.direction.twoD--
+				else scope.direction.twoD = 3
 				break;
 			case scope.keys.RIGHT:
-				scope.pan( new THREE.Vector3( 100, 0, 0 ) );
+				if(scope.direction.twoD !== 3) scope.direction.twoD++
+				else scope.direction.twoD = 0
 				break;
 			case scope.keys.ROTATE:
 				state = STATE.ROTATE;

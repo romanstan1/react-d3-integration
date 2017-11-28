@@ -11,7 +11,7 @@ var container, camera, controls, scene, renderer
 var cubes = []
 var frameRequest
 var helperBoolean = false
-var start = false;
+export var start = false;
 let act = 1
 
 function run() {

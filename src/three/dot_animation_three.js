@@ -62,13 +62,16 @@ function init() {
   // camera.rotation.y = 30;
   // camera.rotation.x = 0;
   // camera.lookAt(new THREE.Vector3(200,200,0));
+  var vFOV = THREE.Math.degToRad( camera.fov ); // convert vertical fov to radians
+  var height = 2 * Math.tan( vFOV / 2 ) * camera.position.z; // visible height
+  var width = height * camera.aspect;
+
 
   THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
-
 	// var domEvents	= new THREEx.DomEvents(camera, renderer.domElement)
-
   controls = new FOUR.OrbitControls( camera );
   controls.addEventListener( 'change', render );
+  controls.dimensions = { width: width, height: height}
   scene = new THREE.Scene();
 
 

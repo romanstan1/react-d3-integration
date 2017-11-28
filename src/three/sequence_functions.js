@@ -113,12 +113,13 @@ const actTwo = (cube, velocity) => {
 
 
 
-const actThreeRandomCubes = new Array(10).fill(0).map((item, i) => {
+let actThreeRandomCubes = new Array(10).fill(0).map((item, i) => {
   return { value: (i + 1) * (halfRowLength - 1) , team:  i%2 === 0? 'left' : 'right', snakeIndex: i}})
+
 let snake = []
 let switchActThree = true
 
-const actThree = (cube, velocity, direction) => {
+const actThree = (cube, velocity, direction, dimensions) => {
   if(switchActThree) {
     let y = 1
     let x = 1
@@ -197,50 +198,29 @@ const actThree = (cube, velocity, direction) => {
       z: cube.position.z + (z * velocity)
     }
   } else {
-    return actThreePart2(cube, velocity, direction)
+    return actThreePart2(cube, velocity, direction, dimensions)
   }
 }
 
 
 
 
-
-
 let snakeMovements = []
-
-
-let overRideHeadX
-let overRideHeadY
-let overRideHeadZ
-
-let roundX
-let roundY
-
 let headDirX
 let headDirY
 let headDirZ
-
-const round = (value, direction) => {
-  if(value >= 0) return (Math.ceil(value/4)) * 4;
-  else if(value < 0) return (Math.floor(value/4)) * 4;
-}
+let beginSnakeGrowth = false
+let setTimeoutBoolean = true
 
 const addSnakeMovements = (x,y,z,position) => {
   snakeMovements.unshift({
     x,y,z,
-    position:{
-      x: round(position.x, x),
-      y: round(position.y, y),
-      z: round(position.z, z)
-    },
+    position:{ ...position},
     cubesPassedThru:[]
   })
-  roundX = round(position.x, x)
-  roundY = round(position.y, y)
-  console.log("snakeMovements",snakeMovements)
 }
 
-const actThreePart2 = (cube, velocity, direction) => {
+const actThreePart2 = (cube, velocity, direction, dimensions) => {
   let x = 0
   let y = 0
   let z = 0
@@ -248,145 +228,148 @@ const actThreePart2 = (cube, velocity, direction) => {
   let overRideX
   let overRideY
 
-  // const snakePosition
-
   let thisCube = actThreeRandomCubes.filter(item => item.team === cube.userData.team && item.value === cube.userData.index)
   if(!!thisCube.length){
-        if(thisCube[0].snakeIndex === 0) {
-          // head of snake, directed by user input
+    if(thisCube[0].snakeIndex === 0) {
+      if(direction.twoD === 0 && headDirX !== 0 && headDirY !== 1) {
+        headDirX = 0
+        headDirY = 1
+        addSnakeMovements(headDirX,headDirY,0,cube.position)
+      } else if(direction.twoD === 1 && headDirX !== 1 && headDirY !== 0) {
+        headDirX = 1
+        headDirY = 0
+        addSnakeMovements(headDirX,headDirY,0,cube.position)
+      } else if(direction.twoD === 2 && headDirX !== 0 && headDirY !== -1) {
+        headDirX = 0
+        headDirY = -1
+        addSnakeMovements(headDirX,headDirY,0,cube.position)
+      } else if(direction.twoD === 3 && headDirX !== -1 && headDirY !== 0) {
+        headDirX = -1
+        headDirY = 0
+        addSnakeMovements(headDirX,headDirY,0,cube.position)
+      }
+    }
 
-          if(direction.twoD === 0 && headDirX !== 0 && headDirY !== 1) {
-            headDirX = 0
-            headDirY = 1
-            addSnakeMovements(headDirX,headDirY,0,cube.position)
-          } else if(direction.twoD === 1 && headDirX !== 1 && headDirY !== 0) {
-            headDirX = 1
-            headDirY = 0
-            addSnakeMovements(headDirX,headDirY,0,cube.position)
-          } else if(direction.twoD === 2 && headDirX !== 0 && headDirY !== -1) {
-            headDirX = 0
-            headDirY = -1
-            addSnakeMovements(headDirX,headDirY,0,cube.position)
-          } else if(direction.twoD === 3 && headDirX !== -1 && headDirY !== 0) {
-            headDirX = -1
-            headDirY = 0
-            addSnakeMovements(headDirX,headDirY,0,cube.position)
-          }
-          x = headDirX
-          y = headDirY
+    // body & head of snake
+    const thisSnakeCube = snake.filter(item => item.snakeCube.snakeIndex === thisCube[0].snakeIndex)[0]
+    // the snake cube in question, could be in any order
 
-          // if(headDirX === 1 && roundX <= cube.position.x)   overRideX = roundX
-          // else if(headDirX === -1 && roundX >= cube.position.x )  overRideX = roundX
-          //
-          // if(headDirY === 1 && roundY <= cube.position.y)   overRideY = roundY
-          // else if(headDirY === -1 && roundY >= cube.position.y )  overRideY = roundY
+    // snake cube hits a position in the snake movements array and updates it personal direction
+    // and it locks into a fixed override in all other direction (update: no it doesnt)
+    // and logs the snakeMovement that its follow internally, so future movements are executed, it does this only once.
 
-          // z = overRideHeadX
+    // establish which snake movement is next for this snake cube
+    // returns (filters) the first item that does not have the SnakeIndex inside of it
+    const whichMovement = snakeMovements.reduce((accumulator, item, i) => {
+      if(item.cubesPassedThru.includes(thisSnakeCube.snakeCube.snakeIndex)) return accumulator
+      else return i
+    },0)
 
-        } else {
-
-          // body of snake
-
-          const thisSnakeCube = snake.filter(item => item.snakeCube.snakeIndex === thisCube[0].snakeIndex)[0]
-          // the snake cube in question, could be in any order
-
-
-          // snake cube hits a position in the snake movements array and updates it personal direction
-          // and it locks into a fixed override in all other direction (update: no it doesnt)
-          // and logs the snakeMovement that its follow internally, so future movements are executed, it does this only once.
-
-
-          // establish which snake movement is next for this snake cube
-          // returns (filters) the first item that does not have the SnakeIndex inside of it
-          const whichMovement = snakeMovements.reduce((accumulator, item, i) => {
-            if(item.cubesPassedThru.includes(thisSnakeCube.snakeCube.snakeIndex)) return accumulator
-            else return i
-          },0)
-
-
-          // for a snakecube going positively in the x Direction
-          if(thisSnakeCube.mesh.userData.direction.x > 0) {
-            // console.log("thisSnakeCube",thisSnakeCube.mesh.userData.direction.x, snakeMovements[whichMovement].x)
-            // if the snakecube has not hit its target, iterate towards it
-            if(thisSnakeCube.mesh.position.x < snakeMovements[whichMovement].position.x) {
-              x = thisSnakeCube.mesh.userData.direction.x // maybe should be the previous movements direction
-            } else {
-              // hit its x target
-              // overRideX = snakeMovements[whichMovement].position.x
-              thisSnakeCube.mesh.userData.direction.x = snakeMovements[whichMovement].x
-              thisSnakeCube.mesh.userData.direction.y = snakeMovements[whichMovement].y
-              x = snakeMovements[whichMovement].x
-              // logs the cube's snakeindex into snakeMovements array// only once!
-              if(!snakeMovements[whichMovement].cubesPassedThru.includes(thisSnakeCube.snakeCube.snakeIndex)) {
-                overRideX = snakeMovements[whichMovement].position.x
-                overRideY = snakeMovements[whichMovement].position.y
-                snakeMovements[whichMovement].cubesPassedThru.push(thisSnakeCube.snakeCube.snakeIndex)
-              }
-            }
-          } else if (thisSnakeCube.mesh.userData.direction.x < 0) {   // for a snakecube going negatively in the x Direction
-            // if the snakecube has not hit its target, iterate towards it
-            if(thisSnakeCube.mesh.position.x > snakeMovements[whichMovement].position.x) {
-              x = thisSnakeCube.mesh.userData.direction.x // maybe should be the previous movements direction
-            } else {
-              // hit its x target
-              thisSnakeCube.mesh.userData.direction.x = snakeMovements[whichMovement].x
-              thisSnakeCube.mesh.userData.direction.y = snakeMovements[whichMovement].y
-              x = snakeMovements[whichMovement].x
-              // logs the cube's snakeindex into snakeMovements array// only once!
-              if(!snakeMovements[whichMovement].cubesPassedThru.includes(thisSnakeCube.snakeCube.snakeIndex)) {
-                overRideX = snakeMovements[whichMovement].position.x
-                overRideY = snakeMovements[whichMovement].position.y
-                snakeMovements[whichMovement].cubesPassedThru.push(thisSnakeCube.snakeCube.snakeIndex)
-              }
-            }
-          } else { // for a snakecube that is not moving in the x plane at all
-            x = 0
-          }
-
-
-          // for a snakecube going positively in the y Direction y --------------------------------------------------------
-          if(thisSnakeCube.mesh.userData.direction.y > 0) {
-            // if the snakecube has not hit its target, iterate towards it
-            if(thisSnakeCube.mesh.position.y < snakeMovements[whichMovement].position.y) {
-              y = thisSnakeCube.mesh.userData.direction.y // maybe should be the previous movements direction
-            } else {
-              // hit its y target or has hit it
-              // overRideY = snakeMovements[whichMovement].position.y
-              thisSnakeCube.mesh.userData.direction.y = snakeMovements[whichMovement].y
-              thisSnakeCube.mesh.userData.direction.x = snakeMovements[whichMovement].x
-              y = snakeMovements[whichMovement].y
-              // logs the cube's snakeindex into snakeMovements array// only once!
-              if(!snakeMovements[whichMovement].cubesPassedThru.includes(thisSnakeCube.snakeCube.snakeIndex)) {
-                overRideX = snakeMovements[whichMovement].position.x
-                overRideY = snakeMovements[whichMovement].position.y
-                snakeMovements[whichMovement].cubesPassedThru.push(thisSnakeCube.snakeCube.snakeIndex)
-              }
-            }
-          } else if (thisSnakeCube.mesh.userData.direction.y < 0) {   // for a snakecube going negatively in the y Direction
-            // if the snakecube has not hit its target, iterate towards it
-            if(thisSnakeCube.mesh.position.y > snakeMovements[whichMovement].position.y) {
-              y = thisSnakeCube.mesh.userData.direction.y // maybe should be the previous movements direction
-            } else {
-              // hit its y target
-              thisSnakeCube.mesh.userData.direction.y = snakeMovements[whichMovement].y
-              thisSnakeCube.mesh.userData.direction.x = snakeMovements[whichMovement].x
-              y = snakeMovements[whichMovement].y
-              // logs the cube's snakeindex into snakeMovements array// only once!
-              if(!snakeMovements[whichMovement].cubesPassedThru.includes(thisSnakeCube.snakeCube.snakeIndex)) {
-                overRideY = snakeMovements[whichMovement].position.y
-                overRideX = snakeMovements[whichMovement].position.x
-                snakeMovements[whichMovement].cubesPassedThru.push(thisSnakeCube.snakeCube.snakeIndex)
-              }
-            }
-          } else {
-            y = 0// for a snakecube that is not moving in the y plane at all
-          }
+    // for a snakecube going positively in the x Direction
+    if(thisSnakeCube.mesh.userData.direction.x > 0) {
+      // console.log("thisSnakeCube",thisSnakeCube.mesh.userData.direction.x, snakeMovements[whichMovement].x)
+      // if the snakecube has not hit its target, iterate towards it
+      if(thisSnakeCube.mesh.position.x < snakeMovements[whichMovement].position.x) {
+        x = thisSnakeCube.mesh.userData.direction.x // maybe should be the previous movements direction
+      } else {
+        // hit its x target
+        thisSnakeCube.mesh.userData.direction.x = snakeMovements[whichMovement].x
+        thisSnakeCube.mesh.userData.direction.y = snakeMovements[whichMovement].y
+        x = snakeMovements[whichMovement].x
+        // logs the cube's snakeindex into snakeMovements array// only once!
+        if(!snakeMovements[whichMovement].cubesPassedThru.includes(thisSnakeCube.snakeCube.snakeIndex)) {
+          overRideX = snakeMovements[whichMovement].position.x
+          overRideY = snakeMovements[whichMovement].position.y
+          snakeMovements[whichMovement].cubesPassedThru.push(thisSnakeCube.snakeCube.snakeIndex)
         }
+      }
+    } else if (thisSnakeCube.mesh.userData.direction.x < 0) {   // for a snakecube going negatively in the x Direction
+      // if the snakecube has not hit its target, iterate towards it
+      if(thisSnakeCube.mesh.position.x > snakeMovements[whichMovement].position.x) {
+        x = thisSnakeCube.mesh.userData.direction.x // maybe should be the previous movements direction
+      } else {
+        // hit its x target
+        thisSnakeCube.mesh.userData.direction.x = snakeMovements[whichMovement].x
+        thisSnakeCube.mesh.userData.direction.y = snakeMovements[whichMovement].y
+        x = snakeMovements[whichMovement].x
+        // logs the cube's snakeindex into snakeMovements array// only once!
+        if(!snakeMovements[whichMovement].cubesPassedThru.includes(thisSnakeCube.snakeCube.snakeIndex)) {
+          overRideX = snakeMovements[whichMovement].position.x
+          overRideY = snakeMovements[whichMovement].position.y
+          snakeMovements[whichMovement].cubesPassedThru.push(thisSnakeCube.snakeCube.snakeIndex)
+        }
+      }
+    } else { // for a snakecube that is not moving in the x plane at all
+      x = 0
+    }
+
+
+    // for a snakecube going positively in the y Direction y --------------------------------------------------------
+    if(thisSnakeCube.mesh.userData.direction.y > 0) {
+      // if the snakecube has not hit its target, iterate towards it
+      if(thisSnakeCube.mesh.position.y < snakeMovements[whichMovement].position.y) {
+        y = thisSnakeCube.mesh.userData.direction.y // maybe should be the previous movements direction
+      } else {
+        // hit its y target or has hit it
+        // overRideY = snakeMovements[whichMovement].position.y
+        thisSnakeCube.mesh.userData.direction.y = snakeMovements[whichMovement].y
+        thisSnakeCube.mesh.userData.direction.x = snakeMovements[whichMovement].x
+        y = snakeMovements[whichMovement].y
+        // logs the cube's snakeindex into snakeMovements array// only once!
+        if(!snakeMovements[whichMovement].cubesPassedThru.includes(thisSnakeCube.snakeCube.snakeIndex)) {
+          overRideX = snakeMovements[whichMovement].position.x
+          overRideY = snakeMovements[whichMovement].position.y
+          snakeMovements[whichMovement].cubesPassedThru.push(thisSnakeCube.snakeCube.snakeIndex)
+        }
+      }
+    } else if (thisSnakeCube.mesh.userData.direction.y < 0) {   // for a snakecube going negatively in the y Direction
+      // if the snakecube has not hit its target, iterate towards it
+      if(thisSnakeCube.mesh.position.y > snakeMovements[whichMovement].position.y) {
+        y = thisSnakeCube.mesh.userData.direction.y // maybe should be the previous movements direction
+      } else {
+        // hit its y target
+        thisSnakeCube.mesh.userData.direction.y = snakeMovements[whichMovement].y
+        thisSnakeCube.mesh.userData.direction.x = snakeMovements[whichMovement].x
+        y = snakeMovements[whichMovement].y
+        // logs the cube's snakeindex into snakeMovements array// only once!
+        if(!snakeMovements[whichMovement].cubesPassedThru.includes(thisSnakeCube.snakeCube.snakeIndex)) {
+          overRideY = snakeMovements[whichMovement].position.y
+          overRideX = snakeMovements[whichMovement].position.x
+          snakeMovements[whichMovement].cubesPassedThru.push(thisSnakeCube.snakeCube.snakeIndex)
+        }
+      }
+    } else {
+      y = 0 // for a snakecube that is not moving in the y plane at all
+    }
+  } else {
+    // animate the snake growth here
+
+  
+
+
+
+
+  }
+
+  // redirect snake position when it hits the edge of the view
+  let newX = overRideX || cube.position.x + (x * velocity * 0.1)
+  let newY = overRideY || cube.position.y + (y * velocity * 0.1)
+
+  if(Math.abs(newX) >= Math.floor(dimensions.width / 2))  newX = newX * -1
+  if(Math.abs(newY) >= Math.floor(dimensions.height / 2)) newY = newY * -1
+
+  if(setTimeoutBoolean) {
+    // console.log("setTimeoutBoolean",setTimeoutBoolean)
+    setTimeout(() => {
+      console.log("setTimeout fired")
+      beginSnakeGrowth = true
+    }, 5000)
+    setTimeoutBoolean = false
   }
 
   return {
-    x: overRideX || cube.position.x + (x * velocity * 0.1),
-    y: overRideY || cube.position.y + (y * velocity * 0.1),
+    x: newX,
+    y: newY,
     z: cube.position.z + (z * velocity * 0.1)
   }
 }
@@ -427,7 +410,7 @@ export const positionChange = (cube, controls, act) => {
   switch (act) {
     case 1: return actOne(cube, controls.animationSpeed)
     case 2: return actTwo(cube, controls.animationSpeed)
-    case 3: return actThree(cube, controls.animationSpeed, controls.direction)
+    case 3: return actThree(cube, controls.animationSpeed, controls.direction, controls.dimensions)
     default: return actRandom(cube, controls.animationSpeed)
   }
 }

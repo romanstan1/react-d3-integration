@@ -1,7 +1,8 @@
 import {halfRowLength} from './modules'
-import * as d3 from 'd3'
-import {cubicOut, cubicIn,linear, cubicInOut, elasticInOut, quartInOut, quartIn, quartOut} from 'eases'
+// import * as d3 from 'd3'
+// import {cubicOut, cubicIn,linear, cubicInOut, elasticInOut, quartInOut, quartIn, quartOut} from 'eases'
 import _ from 'lodash'
+import {iterateToTarget} from './sequence_modules'
 
 let value = 0
 let value2 = true
@@ -61,9 +62,10 @@ const actTwo = (cube, velocity) => {
   let x = 1
   let z = 0
   const gapSize = 8
+  const speedup = 0
 
-  let direction = -1
-    if(cube.userData.team === 'right') direction = 1
+  let xDirection = -1
+    if(cube.userData.team === 'right') xDirection = 1
 
   const yDirection = cube.userData.centralProximity / Math.abs(cube.userData.centralProximity)
 
@@ -75,38 +77,18 @@ const actTwo = (cube, velocity) => {
   let yPrior = rowRedirect * -1
   let xPrior = (cube.userData.index % halfRowLength) * cube.userData.size.x
     if(cube.userData.team === 'right' ) xPrior = xPrior + 2
-    else xPrior = (xPrior * direction) - 2
+    else xPrior = (xPrior * xDirection) - 2
 
 // targets for x and y
   const xTarget =  xPrior * gapSize
   const yTarget = (cube.userData.centralProximity - (yDirection * 0.5)) * cube.userData.size.y * gapSize
 
 // ease and increment to positions
-  const xScale = d3.scaleLinear().domain([xPrior, xTarget])
-  const yScale = d3.scaleLinear().domain([yPrior, yTarget])
-
-  const yAbs = cube.position.y + (y * yDirection)
-  const yVal = yScale(yAbs)
-  const yEased = cubicOut(yVal)
-  const newYIncrement = (yEased/yVal)
-
-  const xAbs = cube.position.x + (x * direction)
-  const xVal = xScale(xAbs)
-  const xEased = cubicOut(xVal)
-  const newXIncrement = (xEased/xVal)
-
-  let overRideX = xTarget
-  let overRideY = yTarget
-
-  if(xTarget > cube.position.x + newXIncrement) overRideX = cube.position.x + newXIncrement
-  else if (xTarget < cube.position.x - newXIncrement) overRideX = cube.position.x - newXIncrement
-
-  if(yTarget > cube.position.y + newYIncrement) overRideY = cube.position.y + newYIncrement
-  else if (yTarget < cube.position.y - newYIncrement) overRideY = cube.position.y - newYIncrement
+  const tgs = iterateToTarget(cube, xTarget, yTarget, xPrior, yPrior, xDirection, yDirection, x, y, speedup)
 
   return {
-    x: overRideX,
-    y: overRideY,
+    x: tgs.overRideX,
+    y: tgs.overRideY,
     z: cube.position.z + (z * velocity)
   }
 }
@@ -127,8 +109,8 @@ const actThree = (cube, velocity, direction, dimensions) => {
     const gapSize = 8
     let speedup = 10
 
-    let direction = -1
-    if(cube.userData.team === 'right') direction = 1
+    let xDirection = -1
+    if(cube.userData.team === 'right') xDirection = 1
 
     const yDirection = cube.userData.centralProximity / Math.abs(cube.userData.centralProximity)
 
@@ -140,7 +122,7 @@ const actThree = (cube, velocity, direction, dimensions) => {
     let yPrior = rowRedirect * -1
     let xPrior = (cube.userData.index % halfRowLength) * cube.userData.size.x
     if(cube.userData.team === 'right' ) xPrior = xPrior + 2
-    else xPrior = (xPrior * direction) - 2
+    else xPrior = (xPrior * xDirection) - 2
 
     // targets for x and y
     let xTarget =  xPrior * gapSize
@@ -156,7 +138,6 @@ const actThree = (cube, velocity, direction, dimensions) => {
       }
     }
 
-
     if(thisCube.length === 1) { // set snake cubes targets here
       if(snake.length === 10) {
         xTarget = thisCube[0].snakeIndex * cube.userData.size.x * -1
@@ -169,32 +150,14 @@ const actThree = (cube, velocity, direction, dimensions) => {
       // set all other cubes targets here
       yTarget = yTarget + (yDirection * 1000)
     }
-    // ease and increment to positions
-    const xScale = d3.scaleLinear().domain([xPrior, xTarget])
-    const yScale = d3.scaleLinear().domain([yPrior, yTarget])
 
-    const yAbs = cube.position.y + (y * yDirection)
-    const yVal = yScale(yAbs)
-    const yEased = cubicOut(yVal)
-    const newYIncrement = (yEased/yVal)
+    // iterate and ease to a point
+    const tgs = iterateToTarget(cube, xTarget, yTarget, xPrior, yPrior, xDirection, yDirection, x, y, speedup)
 
-    const xAbs = cube.position.x + (x * direction)
-    const xVal = xScale(xAbs)
-    const xEased = cubicOut(xVal)
-    const newXIncrement = (xEased/xVal)
-
-    let overRideX = xTarget
-    let overRideY = yTarget
-
-    if(xTarget > cube.position.x + newXIncrement + speedup) overRideX = cube.position.x + newXIncrement + speedup
-    else if (xTarget < cube.position.x - newXIncrement - speedup) overRideX = cube.position.x - newXIncrement - speedup
-
-    if(yTarget > cube.position.y + newYIncrement + speedup) overRideY = cube.position.y + newYIncrement + speedup
-    else if (yTarget < cube.position.y - newYIncrement - speedup) overRideY = cube.position.y - newYIncrement - speedup
 
     return {
-      x: overRideX,
-      y: overRideY,
+      x: tgs.overRideX,
+      y: tgs.overRideY,
       z: cube.position.z + (z * velocity)
     }
   } else {
@@ -209,7 +172,10 @@ let snakeMovements = []
 let headDirX
 let headDirY
 let headDirZ
-let beginSnakeGrowth = false
+let beginSnakeGrowth = () => {
+  console.log("snake",snake)
+  setTimeout(beginSnakeGrowth, 1000)
+}
 let setTimeoutBoolean = true
 
 const addSnakeMovements = (x,y,z,position) => {
@@ -228,9 +194,10 @@ const actThreePart2 = (cube, velocity, direction, dimensions) => {
   let overRideX
   let overRideY
 
-  let thisCube = actThreeRandomCubes.filter(item => item.team === cube.userData.team && item.value === cube.userData.index)
+  let thisCube = snake.filter(item => item.snakeCube.team === cube.userData.team && item.snakeCube.value === cube.userData.index )
+
   if(!!thisCube.length){
-    if(thisCube[0].snakeIndex === 0) {
+    if(thisCube[0].snakeCube.snakeIndex === 0) {
       if(direction.twoD === 0 && headDirX !== 0 && headDirY !== 1) {
         headDirX = 0
         headDirY = 1
@@ -251,7 +218,7 @@ const actThreePart2 = (cube, velocity, direction, dimensions) => {
     }
 
     // body & head of snake
-    const thisSnakeCube = snake.filter(item => item.snakeCube.snakeIndex === thisCube[0].snakeIndex)[0]
+    const thisSnakeCube = thisCube[0]
     // the snake cube in question, could be in any order
 
     // snake cube hits a position in the snake movements array and updates it personal direction
@@ -342,11 +309,25 @@ const actThreePart2 = (cube, velocity, direction, dimensions) => {
       y = 0 // for a snakecube that is not moving in the y plane at all
     }
   } else {
+    // if(beginSnakeGrowth && cube.userData.index === 2) console.log("cube",cube)
+    // cube.userData.
+    // console.log("snake",snake)
     // animate the snake growth here
 
-  
+    // first, define targetsxs
 
+    // iteratre to them
+    // const tgs = iterateToTarget(cube, xTarget, yTarget, xPrior, yPrior, xDirection, yDirection, x, y, speedup)
+    // overRideX = tgs.overRideX
+    // overRideY = tgs.overRideY
 
+    // let thisCube = actThreeRandomCubes.filter(item => item.team === cube.userData.team && item.value === cube.userData.index)
+    //
+    // if(thisCube.length === 1) { // create snake
+    //   if(snake.length !== actThreeRandomCubes.length) {
+    //     snake.push({ mesh:cube, snakeCube:thisCube[0] })
+    //   }
+    // }
 
 
   }
@@ -362,7 +343,7 @@ const actThreePart2 = (cube, velocity, direction, dimensions) => {
     // console.log("setTimeoutBoolean",setTimeoutBoolean)
     setTimeout(() => {
       console.log("setTimeout fired")
-      beginSnakeGrowth = true
+      beginSnakeGrowth()
     }, 5000)
     setTimeoutBoolean = false
   }

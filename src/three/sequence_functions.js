@@ -2,7 +2,7 @@ import {halfRowLength} from './modules'
 // import * as d3 from 'd3'
 // import {cubicOut, cubicIn,linear, cubicInOut, elasticInOut, quartInOut, quartIn, quartOut} from 'eases'
 import _ from 'lodash'
-import {iterateToTarget} from './sequence_modules'
+import {iterateToTarget, iterateToTargetLinear} from './sequence_modules'
 import {start} from './dot_animation_three'
 
 let value = 0
@@ -95,8 +95,8 @@ const actTwo = (cube, velocity) => {
 }
 
 
-
-let actThreeRandomCubes = new Array(10).fill(0).map((item, i) => {
+let snakeSize = 10
+let actThreeRandomCubes = new Array(snakeSize).fill(0).map((item, i) => {
   return { value: (i + 1) * (halfRowLength - 1) , team:  i%2 === 0? 'left' : 'right', snakeIndex: i}})
 
 let snake = []
@@ -140,7 +140,7 @@ const actThree = (cube, velocity, direction, dimensions) => {
     }
 
     if(thisCube.length === 1) { // set snake cubes targets here
-      if(snake.length === 10) {
+      if(snake.length === snakeSize) {
         xTarget = thisCube[0].snakeIndex * cube.userData.size.x * -1
         yTarget = 0
         speedup = 0
@@ -340,25 +340,32 @@ const isIncluded = (snakey, randomCube) => {
 let growSnake = (cube) => {
   if(start) {
     console.log("snake",snake, cube.userData.uniqueIndex)
+    cube.userData = {
+      ...cube.userData,
+      original:false
+    }
     snake.push({
       mesh:cube,
-      snakeCube: {snakeIndex: snake.length }
+      snakeCube: {snakeIndex: snake.length}
     })
     setTimeout(() => addNewCube = true, 1000)
   }
   else clearSnake()
 }
 
-const actFour = (cube, velocity, direction, dimensions) => {
+const actFour = (cube, velocity, direction, dimensions) => {                                           /////////////  ACT 4
   let x = 0
   let y = 0
   let z = 0
 
   let overRideX
   let overRideY
-  let thisCube = snake.filter(item => item.snakeCube.team === cube.userData.team && item.snakeCube.value === cube.userData.index )
+  let reOverRideX
+  let reOverRideY
+  // let thisCube = snake.filter(item => item.snakeCube.team === cube.userData.team && item.snakeCube.value === cube.userData.index )
+  let thisCube = snake.filter(item => item.mesh.userData.uniqueIndex === cube.userData.uniqueIndex )
 
-  if(!!thisCube.length){
+  if(!!thisCube.length && thisCube[0].mesh.userData.original === true){
     if(thisCube[0].snakeCube.snakeIndex === 0) {
       if(direction.twoD === 0 && headDirX !== 0 && headDirY !== 1) {
         headDirX = 0
@@ -378,7 +385,7 @@ const actFour = (cube, velocity, direction, dimensions) => {
         addSnakeMovements(headDirX,headDirY,0,cube.position)
       }
     }
-
+    ////// ------------------- extract above
     // body & head of snake
     const thisSnakeCube = thisCube[0]
     // the snake cube in question, could be in any order
@@ -431,8 +438,6 @@ const actFour = (cube, velocity, direction, dimensions) => {
     } else { // for a snakecube that is not moving in the x plane at all
       x = 0
     }
-
-
     // for a snakecube going positively in the y Direction y --------------------------------------------------------
     if(thisSnakeCube.mesh.userData.direction.y > 0) {
       // if the snakecube has not hit its target, iterate towards it
@@ -470,29 +475,30 @@ const actFour = (cube, velocity, direction, dimensions) => {
     } else {
       y = 0 // for a snakecube that is not moving in the y plane at all
     }
+
+    ////// ------------------- extract above
   } else {
-    //// GROW SNAKE123 HERE
+    //// GROW SNAKE HERE
+    if(!!thisCube.length) {
+      let endOfSnake = snake.filter(item => item.mesh.userData.original === true)
+      endOfSnake = endOfSnake[endOfSnake.length - 1].mesh.position
+      // last cube in stake body ie the tail
+      const tgs = iterateToTargetLinear(cube, endOfSnake.x, endOfSnake.y, 5)
 
-    
-    // if(beginSnakeGrowth && cube.userData.index === 2) console.log("cube",cube)
-    // cube.userData.
-    // console.log("snake",snake)
-    // animate the snake growth here
-
-    // first, define targetsxs
-
-    // iteratre to them
-    // const tgs = iterateToTarget(cube, xTarget, yTarget, xPrior, yPrior, xDirection, yDirection, x, y, speedup)
-    // overRideX = tgs.overRideX
-    // overRideY = tgs.overRideY
-
-    // let thisCube = actThreeRandomCubes.filter(item => item.team === cube.userData.team && item.value === cube.userData.index)
-    //
-    // if(thisCube.length === 1) { // create snake
-    //   if(snake.length !== actThreeRandomCubes.length) {
-    //     snake.push({ mesh:cube, snakeCube:thisCube[0] })
-    //   }
-    // }
+      if(tgs.hitX && tgs.hitY) {
+         thisCube[0].mesh.userData.original = true
+      } else {
+        reOverRideX = tgs.overRideX
+        reOverRideY = tgs.overRideY
+      }
+      console.log("cube.userData.uniqueIndex",cube.userData.uniqueIndex)
+      // console.log("tgs", cube.userData.uniqueIndex)
+      // iterate towards target
+      // if(snake[10].mesh.userData.uniqueIndex === cube.userData.uniqueIndex) {
+      //   console.log('snake[10].mesh.userData.uniqueIndex',cube.userData.uniqueIndex, snake[10].mesh.userData.uniqueIndex)
+      //   console.log("snake 10", snake[10].mesh.position.x, reOverRideX)
+      // }
+    }
   }
 
   // redirect snake position when it hits the edge of the view
@@ -518,8 +524,8 @@ const actFour = (cube, velocity, direction, dimensions) => {
 
 
   return {
-    x: newX,
-    y: newY,
+    x: reOverRideX || newX,
+    y: reOverRideY || newY,
     z: cube.position.z + (z * velocity * 0.1)
   }
 }

@@ -48,7 +48,16 @@ export function CreateCubes(cubes, scene, camera, renderer) {
       dithering: true } )
     const cube = new THREE.Mesh( cubeGeometry, cubeMaterial )
     cube.position.set( item.position.x, item.position.y + (item.size.y * item.index), item.position.z)
-    cube.userData = {direction: item.direction, team: item.team, index: item.index, size: item.size, centralProximity: item.centralProximity, rowIndex: item.rowIndex, uniqueIndex: item.uniqueIndex}
+    cube.userData = {
+      direction: item.direction,
+      team: item.team,
+      index: item.index,
+      size: item.size,
+      centralProximity: item.centralProximity,
+      rowIndex: item.rowIndex,
+      uniqueIndex: item.uniqueIndex,
+      original: true
+    }
     // cube.castShadow = true;
 
     domEvents.addEventListener(cube, 'click', function(event){

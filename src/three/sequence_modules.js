@@ -173,7 +173,8 @@ export const animateSnakeBody = (thisCube, overRideX, overRideY, x, y, snakeMove
   // or it Could just copy the direction of the last cube in the snake
   // What is the logic then?
   // if thisSnakeCube.mesh.userData.new === true then INITIALLY just go in the direction that the last cube is going?
-  //
+  // if the mesueuserData.new === true
+  // or if the mesueuserData.new === true &&   
 
   const whichMovement = snakeMovements.reduce((accumulator, item, i) => {
     if(item.cubesPassedThru.includes(thisSnakeCube.snakeCube.snakeIndex)) return accumulator

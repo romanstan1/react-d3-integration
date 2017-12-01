@@ -3,7 +3,7 @@ import THREEx from './THREEx.js'
 
 export let halfRowLength = 5
 
-const numberOfCubes = (halfRowLength * 2) * (halfRowLength * 2)
+export const numberOfCubes = (halfRowLength * 2) * (halfRowLength * 2)
 let halfwayIndex = (numberOfCubes / 2) - 1
 
 console.log("numberOfCubes",numberOfCubes)

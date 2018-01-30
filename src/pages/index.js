@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ProgressArc, SimilarityNetwork, HierarchicalEdgeGraph, ChordDiagram, DotAnimation} from '../matrix'
+import {Workshop, ProgressArc, SimilarityNetwork, HierarchicalEdgeGraph, ChordDiagram, DotAnimation, DataExperiment} from '../matrix'
 
 export class SimilarityNetworkPage extends Component {
   render() {
@@ -11,6 +11,28 @@ export class SimilarityNetworkPage extends Component {
         />
       </div>
     ]
+  }
+}
+export class DataExperimentPage extends Component {
+  render() {
+      return <div className='dataExperiment'>
+        <DataExperiment
+          id="dataExperiment"
+          dimensions={{height:window.innerHeight, width:window.innerWidth}}
+        />
+      </div>
+
+  }
+}
+export class WorkshopPage extends Component {
+  render() {
+      return <div className='WorkshopPage'>
+        <Workshop
+          id="Workshop"
+          dimensions={{height:window.innerHeight, width:window.innerWidth}}
+        />
+      </div>
+
   }
 }
 export class ChordDiagramPage extends Component {

@@ -23,6 +23,18 @@ div.dot-animation {
     margin: 0px;
     overflow: hidden; }
 
+div.dataExperiment {
+  position: absolute;
+  background: grey;
+  width: 100%;
+  margin-top: 130px; }
+  div.dataExperiment div.innerBlock {
+    position: relative;
+    background: ghostwhite;
+    width: 70%;
+    margin: 0 auto;
+    min-height: 30vh; }
+
 div.error {
   text-align: center;
   display: flex;

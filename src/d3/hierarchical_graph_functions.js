@@ -21,7 +21,7 @@ export function initializeDom() {
       .attr("width", width)
       .attr("height", diameter + 50)
       .append("g")
-      .attr("transform", "translate(" + ( width / 2) + "," + radius + ")");
+      .attr("transform", "translate(" + ( width / 2) + "," + (diameter / 2) + ")");
 }
 
 function mouseover(d) {
@@ -63,15 +63,72 @@ function moveNode() {
 }
 
 
+function render(data) {
+  const newData = []
+
+  data.forEach((item, i) => {
+
+    if(!!item.firstCount) {
+      for(i = 0; i < item.firstCount; i++) {
+        newData.push({
+          name:item.aRef, linkName: item.first,
+
+          gender:'Female',
+          color:'Red',
+          linkColor: 'Red',
+          linkGender: 'Male',
+          linkMaterial:'Metal',
+          material:'Acetate'
+        })
+      }
+    }
+
+   if(!!item.secondCount) {
+
+     for( i = 0; i < item.secondCount; i++) {
+       newData.push({
+         name:item.aRef, linkName: item.second,
+
+         gender:'Male',
+         color:'Black',
+         linkColor: 'Black',
+         linkGender: 'Male',
+         linkMaterial:'Acetate',
+         material:'Acetate',
+         style: 'Round',
+         linkStyle: 'Round'
+       })
+     }
+   }
+  })
+
+  return newData
+}
+
+
+// export function renderDom(category) {
+//   d3.csv('../actualData.csv', (data) => {
+//     render(data)
+//     console.log("category newData", category, newData)
+//     renderDomProperly(category,newData)
+//   })
+// }
 
 export function renderDom(category) {
-  d3.csv('../HierarchicalEdge.csv', (error, classes) => {
 
-    svg.select("g").remove()
+  d3.csv('../actualData.csv', (error, classes) => {
+    const newData = render(classes)
+    console.log("newData",newData)
+  })
+  d3.csv('../HierarchicalEdge.csv', (error, classes) => {
+  // d3.csv('../actualData.csv', (error, classes) => {
+  //
+    console.log("classes",classes)
     svg.select("g").remove()
 
     const root = packageHierarchy(createImportData(classes, category))
     cluster(root)
+    // console.log("packageImports(root.leaves())",packageImports(root.leaves()))
 
     let previousLink
     let linkFreq = 1
@@ -119,12 +176,12 @@ export function renderDom(category) {
       const g = d3.select(".node-group")
 
 
-    console.log("categoryMiddles",categoryMiddles)
+    // console.log("categoryMiddles",categoryMiddles)
     // categoryMiddles.
 
 
       categoryMiddles.forEach((c) => {
-        console.log(c.x, c.y)
+        // console.log(c.x, c.y)
         g.append("g")
         .attr("transform", (d) =>
           "rotate(" + (c.x - 90) + ")translate(" + (c.y + 60) + ",-20)rotate(90)")

@@ -10,6 +10,7 @@ export default class Navigation extends Component {
         <div><Link to="/HierarchicalEdge"> Hierarchical Edge Bundling</Link></div>
         <div><Link to="/ChordDiagram"> Chord Diagram</Link></div>
         <div><Link to="/DotAnimation"> Dot Animation</Link></div>
+        <div><Link to="/DataExperiment"> Data Experiment</Link></div>
       </div>
     )
   }

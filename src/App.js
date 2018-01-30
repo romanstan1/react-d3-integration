@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Route,Router,Switch} from 'react-router-dom'
 import createBrowserHistory from 'history/createBrowserHistory'
-import {SimilarityNetworkPage, ProgressArcPage, HierarchicalEdgePage, ChordDiagramPage, DotAnimationPage} from './pages'
+import {WorkshopPage, SimilarityNetworkPage, ProgressArcPage, HierarchicalEdgePage, ChordDiagramPage, DotAnimationPage,DataExperimentPage} from './pages'
 import Navigation from './pages/Navigation'
 import Error from './pages/Error'
 
@@ -19,6 +19,8 @@ class App extends Component {
             <Route exact path="/ChordDiagram" component={ChordDiagramPage} />
             <Route exact path="/HierarchicalEdge" component={HierarchicalEdgePage} />
             <Route exact path="/DotAnimation" component={DotAnimationPage} />
+            <Route exact path="/DataExperiment" component={DataExperimentPage} />
+            <Route exact path="/Workshop" component={WorkshopPage} />
             <Route component={Error}/>
           </Switch>
         </span>

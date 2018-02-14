@@ -17,6 +17,7 @@
     "react-scripts": "1.0.17",
     "react-three-renderer": "^3.2.3",
     "three": "^0.88.0",
+    "three-window-resize": "^1.0.4",
     "threex": "^1.0.0",
     "underscore": "^1.8.3"
   },

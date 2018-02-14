@@ -3,7 +3,7 @@ import {halfRowLength} from './modules'
 // import {cubicOut, cubicIn,linear, cubicInOut, elasticInOut, quartInOut, quartIn, quartOut} from 'eases'
 import _ from 'lodash'
 import {iterateToTarget, iterateToTargetLinear, animateSnakeBody,snakeHeadDirection, findCubeLoop} from './sequence_modules'
-import {start} from './dot_animation_three'
+import {start} from '../dot_animation_three'
 
 let value = 0
 let value2 = true

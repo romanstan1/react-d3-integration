@@ -1,7 +1,8 @@
 import * as THREE from 'three'
-import FOUR from './OrbitControls.js'
-// import {positionChange} from './sequence_functions.js'
-import THREEx from './THREEx.js'
+import FOUR from './ThreeJS/OrbitControls.js'
+import {CreateCubes, CreateLights} from './ThreeJS/modules.js'
+import {positionChange} from './ThreeJS/sequence_functions.js'
+// import THREEx from './ThreeJS/THREEx.js'
 
 
 var container, camera, controls, scene, renderer
@@ -74,12 +75,18 @@ function init() {
   scene = new THREE.Scene();
 
 
+  const instantiateLights = new CreateLights(scene, helperBoolean)
+  scene = instantiateLights.scene
   // renderer = new THREE.CanvasRenderer( { alpha: true }); // gradient
   renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
   // renderer.setClearColor( 0x000000 );
   renderer.setSize( window.innerWidth, window.innerHeight );
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  const instantiateCubes = new CreateCubes(cubes, scene, camera, renderer)
+  cubes = instantiateCubes.cubes
+  scene = instantiateCubes.scene
 
   container = document.getElementById( 'dot-canvas' );
   container.appendChild( renderer.domElement );
@@ -99,7 +106,16 @@ function animate() {
 }
 
 function move() {
+  if (start)  {
 
+    cubes.forEach((cube, i) => {
+      const newPosition = positionChange(cube, controls, act )
+      cube.position.set(newPosition.x, newPosition.y, newPosition.z)
+    })
+
+    render();
+    frameRequest = requestAnimationFrame( move )
+  }
 }
 
 function render() {

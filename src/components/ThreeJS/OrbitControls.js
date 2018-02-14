@@ -268,6 +268,7 @@ FOUR.OrbitControls = function ( object, domElement ) {
 				break;
 			case scope.keys.UP:
 				scope.direction.threeD = 1
+				// if(scope.direction.threeD !== 0) scope.direction.threeD--
 				// scope.pan( new THREE.Vector3( 0, 100, 0 ) );
 				break;
 			case scope.keys.BOTTOM:

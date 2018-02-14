@@ -14,7 +14,6 @@ export function createLights(scene) {
   spotLight.distance = 3085;
 
   spotLight.castShadow = true;
-  // spotLight.AmbientLight = 0.5;
   spotLight.shadow.darkness = 0.5;
   spotLight.shadow.mapSize.width = 1024;
   spotLight.shadow.mapSize.height = 1024;

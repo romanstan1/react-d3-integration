@@ -18,16 +18,14 @@ export default function init() {
   renderer = new THREE.WebGLRenderer({ antialias: true })
 
   cube = new Cube(scene).mesh
-
   createLights(scene)
 
   camera.position.z = 4
-  // scene.add(cube)
   renderer.setClearColor('#000000')
   renderer.setSize(width, height)
 
   const element = document.getElementById('terrain')
-  window.addEventListener( 'resize', onWindowResize, false );
+  window.addEventListener('resize', onWindowResize, false )
   element.appendChild(renderer.domElement)
   animate()
 }

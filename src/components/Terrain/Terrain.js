@@ -3,6 +3,7 @@ import init, {start, stop} from './three/main.js'
 import './index.css'
 
 
+
 class Scene extends Component {
   shouldComponentUpdate(nextProps) {
     return false;

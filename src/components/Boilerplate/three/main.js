@@ -1,7 +1,8 @@
 import * as THREE from 'three'
 import {Cube, createLights} from './create'
-var camera, scene, renderer, cube, frameRequest, width, height, ratio
+import WindowResize from 'three-window-resize'
 
+var camera, scene, renderer, cube, frameRequest, width, height, ratio
 
 export function start() {
   animate()
@@ -9,7 +10,6 @@ export function start() {
 export function stop() {
   cancelAnimationFrame(frameRequest)
 }
-
 
 export default function init() {
   windowDimensions()
@@ -25,7 +25,7 @@ export default function init() {
   renderer.setSize(width, height)
 
   const element = document.getElementById('terrain')
-  window.addEventListener('resize', onWindowResize, false )
+  new WindowResize(renderer, camera)
   element.appendChild(renderer.domElement)
   animate()
 }
@@ -34,13 +34,6 @@ function windowDimensions() {
   width = window.innerWidth
   height = window.innerHeight
   ratio = width / height
-}
-
-function onWindowResize() {
-  windowDimensions()
-  camera.aspect = ratio
-  renderer.setSize(width, height );
-  render();
 }
 
 function animate() {

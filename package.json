@@ -6,6 +6,7 @@
     "d3": "^4.12.0",
     "d3-zoom": "^1.7.1",
     "eases": "^1.0.8",
+    "game-loop": "^0.0.1",
     "gl-vignette-background": "^2.0.1",
     "lodash": "^4.17.4",
     "node-sass-chokidar": "^0.0.3",
@@ -18,7 +19,6 @@
     "react-three-renderer": "^3.2.3",
     "three": "^0.88.0",
     "three-window-resize": "^1.0.4",
-    "threex": "^1.0.0",
     "underscore": "^1.8.3"
   },
   "scripts": {

@@ -13,10 +13,11 @@ var snakeAbsoluteDirection = 'ArrowRight'
 
 function move(delta){
   counter++
-  console.log("counter: ",counter)
+  // console.log("counter: ",counter)
+  // console.log("")
     _.forEachRight(snake,cube => {
     const direction = snakeDirection(snakeAbsoluteDirection)
-    console.log("cube.userData.index: ",cube.userData.index, cube)
+    // console.log("cube.userData.index: ",cube.userData.index, cube)
     if(cube.userData.index === 0) {
       cube.position.x += direction.x * 2
       cube.position.y += direction.y * 2
@@ -27,11 +28,7 @@ function move(delta){
       cube.position.y = precedecingCube.position.y
       cube.position.z = precedecingCube.position.z
     }
-
-
-
   })
-  console.log("")
 }
 
 export function start() {
@@ -43,38 +40,44 @@ export function start() {
 
 export function stop() {
   loop.stop()
-  cancelAnimationFrame(frameRequest)
+  // cancelAnimationFrame(frameRequest)
 }
 
 function onMouseMove( event ) {
 	mouse.x = ( event.clientX / width ) * 2 - 1;
 	mouse.y = - ( event.clientY / height ) * 2 + 1;
 
-  camera.rotation.x = mouse.y * 3
-  camera.rotation.y = mouse.x * -3
+  camera.rotation.x = mouse.y * 0.5
+  camera.rotation.y = mouse.x * -0.5
 }
 
 function keydown(event) {
   // change the snake direction
 
   // zoom
-  if(event.key === 'w') {
+  if (event.key === 'w') {
     camera.position.x -= Math.sin(camera.rotation.y)
     camera.position.z -= Math.cos(camera.rotation.y)
   }
-  else if(event.key === 's'){
+  else if (event.key === 's'){
     camera.position.x += Math.sin(camera.rotation.y)
     camera.position.z += Math.cos(camera.rotation.y)
   }
-  else if(event.key === 'd'){
+  else if (event.key === 'd'){
     camera.position.x += Math.sin(camera.rotation.y + (Math.PI/2))
     camera.position.z += Math.cos(camera.rotation.y + (Math.PI/2))
   }
-  else if(event.key === 'a'){
+  else if (event.key === 'a'){
     camera.position.x -= Math.sin(camera.rotation.y + (Math.PI/2))
     camera.position.z -= Math.cos(camera.rotation.y + (Math.PI/2))
   }
-  else {
+  else if (
+    event.key === 'ArrowRight' ||
+    event.key === 'ArrowLeft'  ||
+    event.key === 'ArrowUp'    ||
+    event.key === 'ArrowDown'  ||
+    event.key === 'r'          ||
+    event.key === 'f' ) {
     snakeAbsoluteDirection = event.key
   }
 

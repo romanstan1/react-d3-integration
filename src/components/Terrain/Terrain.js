@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import init, {start, stop} from './three/main.js'
 import './index.css'
 
-
-
 class Scene extends Component {
   shouldComponentUpdate(nextProps) {
     return false;
@@ -17,10 +15,13 @@ export default class Terrain extends Component {
   state = {
     startstop: 'Stop'
   }
+
   componentDidMount() {
     init()
+    document.addEventListener("keydown", this.handleKeydown);
   }
-  handleClick = () => {
+
+  handleStartStop = () => {
     const {startstop} = this.state
     if(startstop === 'Stop') {
       this.setState({startstop: 'Start'})
@@ -30,11 +31,19 @@ export default class Terrain extends Component {
       start()
     }
   }
-  render() {
 
+  handleKeydown = (e) => {
+    if(e.code === 'Space') {
+      this.handleStartStop()
+    }
+  }
+
+  render() {
     return [
       <Scene key='scene'/>,
-      <div key='button' className='button' onClick={this.handleClick}>{this.state.startstop}</div>
+      <div key='button' className='button' onClick={this.handleStartStop}>
+        {this.state.startstop}
+      </div>
     ]
   }
 }

@@ -1,5 +1,7 @@
 
 import * as THREE from 'three'
+var THREEx = window.THREEx
+
 
 
 export function createLights(scene) {
@@ -27,11 +29,34 @@ export function createLights(scene) {
 }
 
 export class Cube {
-  constructor(scene) {
-    const geometry = new THREE.BoxGeometry(1, 1, 1)
-    const material = new THREE.MeshPhongMaterial({ color: '#433F81' })
+  constructor(scene, camera, renderer,value) {
+    const geometry = new THREE.BoxGeometry(2,2,2)
+    const material = new THREE.MeshPhongMaterial({
+      color: value%2 === 0? '#433F81' :'##dd0d72'
+    })
     const cube = new THREE.Mesh(geometry, material)
+
+    const domEvents	= new THREEx.DomEvents(camera, renderer.domElement)
+    domEvents.addEventListener(cube, 'click', (event) => {
+  		console.log("cube's userdata index: ", cube.userData.index)
+  		console.log("cube's postion: ", cube.position)
+  		console.log(" " )
+  	}, false)
+    cube.userData.index = value
+    cube.position.set( value * 2, 0, 0)
+
     scene.add(cube)
     this.mesh = cube
+  }
+}
+
+
+export class Boundary {
+  constructor(scene) {
+    const geometry = new THREE.BoxGeometry(50, 50, 50)
+    const material = new THREE.MeshPhongMaterial({ color: '#433F81',  wireframe: true })
+    const boundary = new THREE.Mesh(geometry, material)
+    scene.add(boundary)
+    this.mesh = boundary
   }
 }

@@ -1,9 +1,10 @@
 import * as THREE from 'three'
-import {Cube, createLights} from './create'
+import {Cube,Boundary, createLights} from './create'
 import WindowResize from 'three-window-resize'
 
-var camera, scene, renderer, cube, frameRequest, width, height, ratio, loop, mouse
+var camera, scene, renderer, cube, frameRequest, width, height, ratio, loop, mouse,boundary
 var THREEx = window.THREEx
+var snake = [0,1,2,3,4]
 
 
 function move(delta){
@@ -16,10 +17,8 @@ function move(delta){
 
 export function start() {
   loop = new THREEx.PhysicsLoop(1000)
-
   loop.add(move)
   loop.start()
-  console.log("THREEx",THREEx)
   animate()
 }
 export function stop() {
@@ -31,31 +30,40 @@ export function stop() {
 function onMouseMove( event ) {
 	mouse.x = ( event.clientX / width ) * 2 - 1;
 	mouse.y = - ( event.clientY / height ) * 2 + 1;
-  // console.log("mouse.x: ",mouse.x)
-  // console.log("mouse.y: ",mouse.y)
-  //
-  // console.log("camera: ",camera)
 
-  camera.rotation.x = mouse.x
-  camera.rotation.y = mouse.y
+  camera.rotation.x = mouse.y * 3
+  camera.rotation.y = mouse.x * -3
+}
 
-  // cube.rotation.x += 0.1
-  // cube.rotation.y += 0.001
+function zoom(event) {
+  if(event.key === 'w') {
+    camera.position.x -= Math.sin(camera.rotation.y)
+    camera.position.z -= Math.cos(camera.rotation.y)
+  }
+  else if(event.key === 's'){
+    camera.position.x += Math.sin(camera.rotation.y)
+    camera.position.z += Math.cos(camera.rotation.y)
+  }
+  else if(event.key === 'd'){
+    camera.position.x += Math.sin(camera.rotation.y + (Math.PI/2))
+    camera.position.z += Math.cos(camera.rotation.y + (Math.PI/2))
+  }
+  else if(event.key === 'a'){
+    camera.position.x -= Math.sin(camera.rotation.y + (Math.PI/2))
+    camera.position.z -= Math.cos(camera.rotation.y + (Math.PI/2))
+  }
 }
 
 export default function init() {
-  console.log("THREEx",THREEx)
-  // set up
   windowDimensions()
   scene = new THREE.Scene()
-  camera = new THREE.PerspectiveCamera(100,ratio,0.1,1000)
+  camera = new THREE.PerspectiveCamera(75,ratio,0.1,1000)
   renderer = new THREE.WebGLRenderer({ antialias: true })
 
-  cube = new Cube(scene).mesh
   createLights(scene)
+  scene.add( new THREE.AxesHelper( 1000 ) );
 
-  camera.position.z = 4
-  renderer.setClearColor('#000000')
+  camera.position.z = 33
   renderer.setSize(width, height)
 
   const element = document.getElementById('terrain')
@@ -64,7 +72,13 @@ export default function init() {
 
 
   window.addEventListener( 'mousemove', onMouseMove, false );
+  window.addEventListener( 'keydown', zoom, false );
   mouse = new THREE.Vector2();
+
+  snake.forEach((value)=>{
+    new Cube(scene,camera,renderer,value).mesh
+  })
+  new Boundary(scene).mesh
 
 
   start()
@@ -88,10 +102,9 @@ function animate() {
   // cube.position.x += 0.01
 
   render()
-  frameRequest = requestAnimationFrame( animate );
-  // controls.update();
+  frameRequest = requestAnimationFrame(animate)
 }
 
 function render() {
-  renderer.render( scene, camera );
+  renderer.render( scene, camera )
 }

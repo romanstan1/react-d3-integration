@@ -7028,6 +7028,10 @@ three@^0.88.0:
   version "0.88.0"
   resolved "https://registry.yarnpkg.com/three/-/three-0.88.0.tgz#4256c2fc38e4fb23a0d23eba2b6cce4df8e466d5"
 
+threex.domevents@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/threex.domevents/-/threex.domevents-1.0.1.tgz#1c02d2f0fbf5f369125f46d5ae329160c9bbf676"
+
 throat@^3.0.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/throat/-/throat-3.2.0.tgz#50cb0670edbc40237b9e347d7e1f88e4620af836"

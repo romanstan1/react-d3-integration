@@ -32,7 +32,7 @@ export class Cube {
   constructor(scene, camera, renderer,value) {
     const geometry = new THREE.BoxGeometry(2,2,2)
     const material = new THREE.MeshPhongMaterial({
-      color: value%2 === 0? '#433F81' :'##dd0d72'
+      color: value%2 === 0? '#433F81' :'#dd0d72'
     })
     const cube = new THREE.Mesh(geometry, material)
 
@@ -42,7 +42,7 @@ export class Cube {
   		console.log("cube's postion: ", cube.position)
   		console.log(" " )
   	}, false)
-    cube.userData.index = value
+    cube.userData.index = Math.abs(value)
     cube.position.set( value * 2, 0, 0)
 
     scene.add(cube)

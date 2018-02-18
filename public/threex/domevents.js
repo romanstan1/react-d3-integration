@@ -88,14 +88,15 @@ THREEx.DomEvents	= function(camera, domElement)
 	this._$onTouchEnd	= function(){ _this._onTouchEnd.apply(_this, arguments);	};
 	this._$onContextmenu	= function(){ _this._onContextmenu.apply(_this, arguments);	};
 	this._domElement.addEventListener( 'click'	, this._$onClick	, false );
-	this._domElement.addEventListener( 'dblclick'	, this._$onDblClick	, false );
-	this._domElement.addEventListener( 'mousemove'	, this._$onMouseMove	, false );
-	this._domElement.addEventListener( 'mousedown'	, this._$onMouseDown	, false );
-	this._domElement.addEventListener( 'mouseup'	, this._$onMouseUp	, false );
-	this._domElement.addEventListener( 'touchmove'	, this._$onTouchMove	, false );
-	this._domElement.addEventListener( 'touchstart'	, this._$onTouchStart	, false );
-	this._domElement.addEventListener( 'touchend'	, this._$onTouchEnd	, false );
-	this._domElement.addEventListener( 'contextmenu', this._$onContextmenu	, false );
+	
+	// this._domElement.addEventListener( 'dblclick'	, this._$onDblClick	, false );
+	// this._domElement.addEventListener( 'mousemove'	, this._$onMouseMove	, false );
+	// this._domElement.addEventListener( 'mousedown'	, this._$onMouseDown	, false );
+	// this._domElement.addEventListener( 'mouseup'	, this._$onMouseUp	, false );
+	// this._domElement.addEventListener( 'touchmove'	, this._$onTouchMove	, false );
+	// this._domElement.addEventListener( 'touchstart'	, this._$onTouchStart	, false );
+	// this._domElement.addEventListener( 'touchend'	, this._$onTouchEnd	, false );
+	// this._domElement.addEventListener( 'contextmenu', this._$onContextmenu	, false );
 
 }
 

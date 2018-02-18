@@ -1,31 +1,50 @@
 import * as THREE from 'three'
 import {Cube,Boundary, createLights} from './create'
+import {snakeDirection} from './modules'
 import WindowResize from 'three-window-resize'
+import _ from 'lodash'
 
-var camera, scene, renderer, cube, frameRequest, width, height, ratio, loop, mouse,boundary
+var camera, scene, renderer, frameRequest, width, height, ratio, loop, mouse, boundary
+var counter = 0
 var THREEx = window.THREEx
-var snake = [0,1,2,3,4]
+var snake = [ 0,-1,-2,-3,-4 ]
 
+var snakeAbsoluteDirection = 'ArrowRight'
 
 function move(delta){
-    // console.log('move')
-    // cube.rotation.x += 0.1
-    // cube.rotation.y += 0.001
+  counter++
+  console.log("counter: ",counter)
+    _.forEachRight(snake,cube => {
+    const direction = snakeDirection(snakeAbsoluteDirection)
+    console.log("cube.userData.index: ",cube.userData.index, cube)
+    if(cube.userData.index === 0) {
+      cube.position.x += direction.x * 2
+      cube.position.y += direction.y * 2
+      cube.position.z += direction.z * 2
+    } else {
+      const precedecingCube = snake[cube.userData.index - 1]
+      cube.position.x = precedecingCube.position.x
+      cube.position.y = precedecingCube.position.y
+      cube.position.z = precedecingCube.position.z
+    }
+
+
+
+  })
+  console.log("")
 }
 
-
-
 export function start() {
-  loop = new THREEx.PhysicsLoop(1000)
+  loop = new THREEx.PhysicsLoop(5)
   loop.add(move)
   loop.start()
   animate()
 }
+
 export function stop() {
   loop.stop()
   cancelAnimationFrame(frameRequest)
 }
-
 
 function onMouseMove( event ) {
 	mouse.x = ( event.clientX / width ) * 2 - 1;
@@ -35,7 +54,10 @@ function onMouseMove( event ) {
   camera.rotation.y = mouse.x * -3
 }
 
-function zoom(event) {
+function keydown(event) {
+  // change the snake direction
+
+  // zoom
   if(event.key === 'w') {
     camera.position.x -= Math.sin(camera.rotation.y)
     camera.position.z -= Math.cos(camera.rotation.y)
@@ -52,6 +74,10 @@ function zoom(event) {
     camera.position.x -= Math.sin(camera.rotation.y + (Math.PI/2))
     camera.position.z -= Math.cos(camera.rotation.y + (Math.PI/2))
   }
+  else {
+    snakeAbsoluteDirection = event.key
+  }
+
 }
 
 export default function init() {
@@ -70,23 +96,16 @@ export default function init() {
   new WindowResize(renderer, camera)
   element.appendChild(renderer.domElement)
 
-
   window.addEventListener( 'mousemove', onMouseMove, false );
-  window.addEventListener( 'keydown', zoom, false );
+  window.addEventListener( 'keydown', keydown, false );
   mouse = new THREE.Vector2();
 
-  snake.forEach((value)=>{
-    new Cube(scene,camera,renderer,value).mesh
-  })
-  new Boundary(scene).mesh
+  snake = snake.map((value)=>value = new Cube(scene,camera,renderer,value).mesh )
+  boundary = new Boundary(scene).mesh
 
-
+  console.log("snake",snake)
   start()
 }
-
-
-
-
 
 function windowDimensions() {
   width = window.innerWidth
@@ -94,13 +113,7 @@ function windowDimensions() {
   ratio = width / height
 }
 
-
-
 function animate() {
-  // cube.rotation.x += 0.01
-  // cube.rotation.y += 0.01
-  // cube.position.x += 0.01
-
   render()
   frameRequest = requestAnimationFrame(animate)
 }

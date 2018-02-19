@@ -4,7 +4,7 @@ import {snakeDirection} from './modules'
 import WindowResize from 'three-window-resize'
 import _ from 'lodash'
 
-var camera, scene, renderer, frameRequest, width, height, ratio, loop, mouse, boundary
+var camera, scene, renderer, frameRequest, width, height, ratio, loop, mouse, boundary = null
 var counter = 0
 var THREEx = window.THREEx
 var snake = [ 0,-1,-2,-3,-4 ]
@@ -38,9 +38,6 @@ export function start() {
   animate()
 }
 
-export function stop() {
-  loop.stop()
-}
 export function uninitAndStop() {
   stop()
   cancelAnimationFrame(frameRequest)
@@ -49,6 +46,10 @@ export function uninitAndStop() {
   camera, scene, renderer, frameRequest, width, height, ratio, loop, mouse, boundary = null
   counter = 0
   snake = [ 0,-1,-2,-3,-4 ]
+}
+
+export function stop() {
+  loop.stop()
 }
 
 function onMouseMove( event ) {

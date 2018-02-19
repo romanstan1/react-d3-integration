@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import init, {start, stop, uninitAndStop} from './three/main.js'
-import './index.css'
 import Nav from '../Nav'
-
+import './index.css'
 
 class Scene extends Component {
   shouldComponentUpdate(nextProps) {
@@ -13,7 +12,7 @@ class Scene extends Component {
   }
 }
 
-export default class Terrain extends Component {
+export default class ThreeDSnake extends Component {
   state = {
     startstop: 'Stop'
   }

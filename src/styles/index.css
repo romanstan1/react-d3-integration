@@ -35,6 +35,21 @@ div.dataExperiment {
     margin: 0 auto;
     min-height: 30vh; }
 
+nav {
+  position: absolute;
+  right: 10px;
+  display: inline-block; }
+  nav span {
+    display: inline-block;
+    padding: 10px;
+    font-size: 11px;
+    text-transform: uppercase; }
+    nav span a {
+      color: grey;
+      text-decoration: none; }
+      nav span a:hover {
+        opacity: 0.7; }
+
 div.error {
   text-align: center;
   display: flex;

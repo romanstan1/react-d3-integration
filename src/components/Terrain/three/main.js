@@ -1,97 +1,105 @@
 import * as THREE from 'three'
-import {Cube,Boundary, createLights} from './create'
-import {snakeDirection} from './modules'
+import {createLights} from './create'
 import WindowResize from 'three-window-resize'
 import _ from 'lodash'
+// import heightmap from "../../../assets/heightmap.png";
 
-var camera, scene, renderer, frameRequest, width, height, ratio, loop, mouse, boundary
-var counter = 0
+var camera, scene, renderer, frameRequest, width, height, ratio, mouse
+var terrain, texture
 var THREEx = window.THREEx
-var snake = [ 0,-1,-2,-3,-4 ]
-
-var snakeAbsoluteDirection = 'ArrowRight'
-
-function move(delta){
-  counter++
-  // console.log("counter: ",counter)
-  // console.log("")
-    _.forEachRight(snake,cube => {
-    const direction = snakeDirection(snakeAbsoluteDirection)
-    // console.log("cube.userData.index: ",cube.userData.index, cube)
-    if(cube.userData.index === 0) {
-      cube.position.x += direction.x * 2
-      cube.position.y += direction.y * 2
-      cube.position.z += direction.z * 2
-    } else {
-      const precedecingCube = snake[cube.userData.index - 1]
-      cube.position.x = precedecingCube.position.x
-      cube.position.y = precedecingCube.position.y
-      cube.position.z = precedecingCube.position.z
-    }
-  })
-}
 
 export function start() {
-  loop = new THREEx.PhysicsLoop(5)
-  loop.add(move)
-  loop.start()
   animate()
 }
 
-export function stop() {
-  loop.stop()
-}
 export function uninitAndStop() {
-  stop()
   cancelAnimationFrame(frameRequest)
   window.removeEventListener( 'mousemove', onMouseMove, false );
-  window.removeEventListener( 'keydown', keydown, false );
-  camera, scene, renderer, frameRequest, width, height, ratio, loop, mouse, boundary = null
-  counter = 0
-  snake = [ 0,-1,-2,-3,-4 ]
+  camera, scene, renderer, frameRequest, width, height, ratio, mouse = null
 }
 
 function onMouseMove( event ) {
 	mouse.x = ( event.clientX / width ) * 2 - 1;
 	mouse.y = - ( event.clientY / height ) * 2 + 1;
 
-  camera.rotation.x = mouse.y * 0.5
-  camera.rotation.y = mouse.x * -0.5
+  camera.rotation.x = mouse.y * 0.1
+  camera.rotation.y = mouse.x * -0.1
 }
 
-function keydown(event) {
-  // change the snake direction
+function getTerrainPixelData() {
+  var img = document.getElementById("heightmap");
+  var canvas = document.getElementById("canvas");
 
-  // zoom
-  if (event.key === 'w') {
-    camera.position.x -= Math.sin(camera.rotation.y)
-    camera.position.z -= Math.cos(camera.rotation.y)
-  }
-  else if (event.key === 's'){
-    camera.position.x += Math.sin(camera.rotation.y)
-    camera.position.z += Math.cos(camera.rotation.y)
-  }
-  else if (event.key === 'd'){
-    camera.position.x += Math.sin(camera.rotation.y + (Math.PI/2))
-    camera.position.z += Math.cos(camera.rotation.y + (Math.PI/2))
-  }
-  else if (event.key === 'a'){
-    camera.position.x -= Math.sin(camera.rotation.y + (Math.PI/2))
-    camera.position.z -= Math.cos(camera.rotation.y + (Math.PI/2))
-  }
-  else if (
-    event.key === 'ArrowRight' ||
-    event.key === 'ArrowLeft'  ||
-    event.key === 'ArrowUp'    ||
-    event.key === 'ArrowDown'  ||
-    event.key === 'r'          ||
-    event.key === 'f' ) {
-    snakeAbsoluteDirection = event.key
-  }
+  console.log("img",img)
+  console.log("img.height",img.height)
 
+  canvas.width = img.width;
+  canvas.height = img.height;
+  // canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+  //
+  // var data = canvas.getContext('2d').getImageData(0,0, img.height, img.width).data;
+  // var normPixels = []
+  //
+  // for (var i = 0, n = data.length; i < n; i += 4) {
+  //   // get the average value of R, G and B.
+  //   normPixels.push((data[i] + data[i+1] + data[i+2]) / 3);
+  // }
+  //
+  // return normPixels;
 }
+
+function addGround() {
+  var numSegments = 100;
+
+  var geometry = new THREE.PlaneGeometry(2400, 2400, numSegments, numSegments);
+  var material = new THREE.MeshLambertMaterial({
+    color: 0xccccff,
+    wireframe: false
+  });
+
+  // terrain = getTerrainPixelData();
+
+  // keep in mind, that the plane has more vertices than segments. If there's one segment, there's two vertices, if
+  // there's 10 segments, there's 11 vertices, and so forth.
+  // The simplest is, if like here you have 100 segments, the image to have 101 pixels. You don't have to worry about
+  // "skewing the landscape" then..
+
+  // to check uncomment the next line, numbers should be equal
+  // console.log("length: " + terrain.length + ", vertices length: " + geometry.vertices.length);
+  //
+  // for (var i = 0, l = geometry.vertices.length; i < l; i++) {
+  //   var terrainValue = terrain[i] / 255;
+  //   geometry.vertices[i].z = geometry.vertices[i].z + terrainValue * 200 ;
+  // }
+  //
+  // geometry.computeFaceNormals();
+  // geometry.computeVertexNormals();
+  //
+  // var plane = new THREE.Mesh(geometry, material);
+  //
+  // plane.position = new THREE.Vector3(0,0,0);
+  // // rotate the plane so up is where y is growing..
+  //
+  // var q = new THREE.Quaternion();
+  // q.setFromAxisAngle( new THREE.Vector3(-1,0,0), 90 * Math.PI / 180 );
+  // plane.quaternion.multiplyQuaternions( q, plane.quaternion );
+  //
+  // scene.add(plane)
+}
+
+
+
+
+
+
+
+
+
+
+
 
 export default function init() {
+  // default initialization
   windowDimensions()
   scene = new THREE.Scene()
   camera = new THREE.PerspectiveCamera(75,ratio,0.1,1000)
@@ -108,13 +116,44 @@ export default function init() {
   element.appendChild(renderer.domElement)
 
   window.addEventListener( 'mousemove', onMouseMove, false );
-  window.addEventListener( 'keydown', keydown, false );
   mouse = new THREE.Vector2();
 
-  snake = snake.map((value)=>value = new Cube(scene,camera,renderer,value).mesh )
-  boundary = new Boundary(scene).mesh
 
-  console.log("snake",snake)
+  addGround()
+
+
+  //
+  // var texture = THREE.ImageUtils.loadTexture(heightmap, null);
+  //
+  // var geometryTerrain = new THREE.PlaneGeometry(2000, 4000, 256, 256);
+  //
+  // geometryTerrain.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI / 2));
+  // geometryTerrain.computeFaceNormals();
+  // geometryTerrain.computeVertexNormals();
+  // geometryTerrain.computeTangents();
+  //
+  //
+  // var material = new THREE.ShaderMaterial({
+  //   // uniforms:uniformsTerrain,
+  //   // vertexShader:terrainShader.vertexShader,
+  //   // fragmentShader:terrainShader.fragmentShader,
+  //   lights:true,
+  //   fog:false
+  // });
+  //
+  // // create a 3D object to add
+  // var terrain = new THREE.Mesh(geometryTerrain, material);
+  // terrain.position.set(0, -125, 0);
+  // terrain.rotation.x = -Math.PI / 2;
+  //
+  // // add the terrain
+  // scene.add(terrain);
+
+  // console.log("texture",texture)
+
+
+  // createHeightMap(heightmap,element)
+
   start()
 }
 

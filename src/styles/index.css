@@ -48,7 +48,7 @@ nav {
       color: grey;
       text-decoration: none; }
       nav span a:hover {
-        opacity: 0.7; }
+        color: white; }
 
 div.error {
   text-align: center;

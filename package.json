@@ -18,6 +18,7 @@
     "react-scripts": "1.0.17",
     "react-three-renderer": "^3.2.3",
     "three": "^0.88.0",
+    "three-first-person-controls": "^0.2.1",
     "three-window-resize": "^1.0.4",
     "threex.domevents": "^1.0.1",
     "underscore": "^1.8.3"

@@ -8,5 +8,6 @@ export function snakeDirection(snakeAbsoluteDirection) {
     case 'ArrowLeft':  return { x:-1, y: 0,  z: 0  };
     case 'r':          return { x: 0, y: 0,  z: -1 };
     case 'f':          return { x: 0, y: 0,  z: 1  };
+    default: null
   }
 }

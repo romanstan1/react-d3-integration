@@ -162,6 +162,11 @@ div.hierarchical-edge {
   div.hierarchical-edge .link--target {
     stroke: rgba(5, 24, 66, 0.9); }
 
+div#root {
+  cursor: url("http://localhost:3000/cursor.svg"), progress; }
+  div#root nav span a {
+    cursor: url("http://www.myiconfinder.com/uploads/iconsets/32-32-52a139814a546134e8b900c26e9786a5.png"), progress; }
+
 div.progress-arc {
   background: ghostwhite; }
   div.progress-arc a {

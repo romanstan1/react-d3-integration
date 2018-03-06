@@ -4,17 +4,14 @@ import {snakeDirection} from './modules'
 import WindowResize from 'three-window-resize'
 import _ from 'lodash'
 
-var camera, scene, renderer, frameRequest, width, height, ratio, loop, mouse, boundary = null
-var counter = 0
+var camera, scene, renderer, frameRequest, width, height, ratio, loop, mouse
 var THREEx = window.THREEx
 var snake = [ 0,-1,-2,-3,-4 ]
 
 var snakeAbsoluteDirection = 'ArrowRight'
 
 function move(delta){
-  counter++
-  // console.log("counter: ",counter)
-  // console.log("")
+
     _.forEachRight(snake,cube => {
     const direction = snakeDirection(snakeAbsoluteDirection)
     // console.log("cube.userData.index: ",cube.userData.index, cube)
@@ -43,8 +40,7 @@ export function uninitAndStop() {
   cancelAnimationFrame(frameRequest)
   window.removeEventListener( 'mousemove', onMouseMove, false );
   window.removeEventListener( 'keydown', keydown, false );
-  camera, scene, renderer, frameRequest, width, height, ratio, loop, mouse, boundary = null
-  counter = 0
+  camera, scene, renderer, frameRequest, width, height, ratio, loop, mouse
   snake = [ 0,-1,-2,-3,-4 ]
 }
 
@@ -113,7 +109,7 @@ export default function init() {
   mouse = new THREE.Vector2();
 
   snake = snake.map((value)=>value = new Cube(scene,camera,renderer,value).mesh )
-  boundary = new Boundary(scene).mesh
+  new Boundary(scene).mesh
 
   console.log("snake",snake)
   start()
